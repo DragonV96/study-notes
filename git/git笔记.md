@@ -9,14 +9,14 @@
 ​		（1）设置git的用户名和邮箱（第一次安装git的情况下）
 
 ````shell
-$ git config --global user.name "glw"
-$ git config --global user.email "guolongwei@comtom.cn"
+$ git config --global user.name "xxx"
+$ git config --global user.email "xxxxx@xxx"
 ````
 
 ​		（2）生成密钥
 
 ````shell
-$ ssh-keygen -t rsa -C "guolongwei@comtom.cn"
+$ ssh-keygen -t rsa -C "xxxxx@xx"
 ````
 
 ​		（3）连续3个回车，其中第三个回车前需要输入对应的登陆密码，完成后C:\Users\Administrator\\.ssh文件夹下会生成两个文件：`id_rsa`和`id_rsa.pub`
