@@ -148,7 +148,7 @@ Compose和Docker兼容性：
                 max-size              # 设置单个日志文件的大小, 当到达这个值后会进行日志滚动操作
                 max-file              # 日志文件保留的数量
 
-        network_mode          # 指定网络模式 (等同于 docker run --net 的作用, 在使用 swarm 部署时将忽略该选项)         
+        network_mode          # 指定网络模式 (等同于 docker run --net 的作用, 在使用 swarm 部署时将忽略该选项，主机模式如 network_mode: "host" )         
 
         networks              # 将容器加入指定网络 (等同于 docker network connect 的作用), networks 可以位于 compose 文件顶级键和 services 键的二级键
             aliases               # 同一网络上的容器可以使用服务名称或别名连接到其中一个服务的容器

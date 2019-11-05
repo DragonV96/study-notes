@@ -31,7 +31,7 @@ docker run --name storage -tid --restart=always -v /usr/local/comtom/fastdfs/sto
 ````
 docker logs -f -t --tail 666 storage
 
-docker exec -it fastdfs /bin/bash
+docker exec -it fastdfs bash
 
 echo "Hello FastDFS!">index.html
 
@@ -98,8 +98,8 @@ IPV6_DEFROUTE=yes
 IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
 NAME=ens33
-UUID=fa736e1e-65c2-487e-ad8e-31fbf30dd36a
-DEVICE=ens33
+UUID=0c4bed1f-40fc-43ce-8230-d14d4a7abf63
+DEVICE=enp1s0
 ONBOOT=yes
 
 
@@ -158,6 +158,8 @@ docker build -t mysql:5.7.26 .
 docker build -t sys-server:5.0.1 .
 # 星广播
 docker build -t svr-api:5.0.1 .
+# 通播星
+docker build -t gbstar_tbas-service:0.1 .
 ````
 
 打版本号（环境）
