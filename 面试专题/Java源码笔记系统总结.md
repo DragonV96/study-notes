@@ -250,6 +250,20 @@ private static class LongCache {
 
 ### 1.2.2 final
 
+​		final表示不可改变的。
+
+​		**被final修饰的场景**
+
+- 类：表示该类无法被继承
+
+- 方法：表示该类无法被覆写（Override）
+
+- 变量：表示该变量声明时初始化完成，此后不能再修改其内存地址
+
+  ※注意：对于List、Map集合这些类，被final修饰后可以改变其内部的值，但是无法修改初始化时的内存地址。
+
+### 1.2.3 try、catch、finally
+
 
 
 ## 1.3 Arrays、Collections、Objects 常用方法源码解析
