@@ -23,7 +23,106 @@ $ ssh-keygen -t rsa -C "xxxxx@xx"
 
 ​		（4）将`id_rsa.pub`用记事本打开，复制里面的全部内容粘贴到git服务器上的添加ssh配置中即可。
 
+## 1.2 git的基本操作流程
 
+### 1.2.1 克隆远程仓库的代码
+
+​		（1）克隆到本地
+
+````shell
+$ git clone https://xxx.github.com/xxx/xxx.git 
+````
+
+​		（2）克隆到本地指定文件夹 `project`
+
+```shell
+$ git clone https://xxx.github.com/xxx/xxx.git project
+```
+
+### 1.2.2 本地代码提交流程
+
+​		（1）拉取远程仓库最新代码
+
+````shell
+$ git pull
+````
+
+​		（2）将本地新建的文件添加到远程仓库
+
+```shell
+$ git add .
+```
+
+​		（3）将本地修改后的文件提交到远程仓库
+
+```shell
+$ git commit -m "这里是注释"
+```
+
+​		（4）将本地修改后的文件推送到远程仓库
+
+```shell
+$ git push
+```
+
+## 1.3 tag的使用
+
+​		（1）查看tag
+
+```shell
+$ git tag
+```
+
+​		（2）查看指定版本的tag（如查看v1.0开头的所有tag）
+
+```shell
+$ git tag -l 'v1.0*'
+```
+
+​		（3）显示tag信息
+
+```shell
+$ git show v1.0.0
+```
+
+​		（4）指定commit创建tag（如创建名为v1.0.1的tag）
+
+```shell
+$ git tag v1.0.1
+```
+
+​		（5）创建tag（如指定`54642b6204fa5714fa81dbe744f0ae6353977cd0`的commit创建名为`v1.0.1`的tag）
+
+```shell
+$ git tag -a v1.0.1 54642b6204fa5714fa81dbe744f0ae6353977cd0
+```
+
+- 查看commit使用命令 `$ git log`
+
+​		（6）删除tag（如删除名为v1.0.1的tag）
+
+```shell
+$ git tag -d v1.0.1
+```
+
+​		（7）删除远程仓库的指定tag（如删除名为v1.0.1的tag）
+
+```shell
+$ git tag -d v1.0.1
+$ git push origin :refs/tags/v1.0.1
+```
+
+​		（8）推送指定tag到远程仓库（如名为v1.0.1的tag）
+
+```shell
+$ git push origin v1.0.1
+```
+
+​		（9）推送本地所有tag到远程仓库
+
+```shell
+$ git push origin --tags
+```
 
 # 第二章 高级操作
 
