@@ -264,7 +264,45 @@ private static class LongCache {
 
 ### 1.2.3 try、catch、finally
 
+- try：确定代码执行的范围
+- catch：捕捉可能发生的异常
+- finnaly：必须执行的代码块
 
+​		代码演示：
+
+````java
+public void testCatchFinally() {
+  try {
+    log.info("try is run");
+    if (true) {
+      throw new RuntimeException("try exception");
+    }
+  } catch (Exception e) {
+    log.info("catch is run");
+    if (true) {
+      throw new RuntimeException("catch exception");
+    }
+  } finally {
+    log.info("finally is run");
+  }
+}
+````
+
+​		输出结果：
+
+![1574479920217](assets/1574479920217.png)
+
+​		流程分析：
+
+​		（1）finally先执行后，再抛出catch的异常；
+
+​		（2）最终捕获的异常是catch的异常，try抛出来的异常已被catch掉了。
+
+### 1.2.4 volatile
+
+​		volatile表示可见的，常用来修饰**共享变量**
+
+​		作用：当共享变量的值被修改后，会及时通知到其他线程当前共享变量的值已被修改。
 
 ## 1.3 Arrays、Collections、Objects 常用方法源码解析
 
