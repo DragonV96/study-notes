@@ -362,11 +362,93 @@ public void testCatchFinally() {
 
 ## 1.3 Arrays、Collections、Objects 常用方法源码解析
 
-​		
+### 1.3.1 工具类通用特征
+
+​		好的工具类的通用特征：
+
+- 构造器必须是私有的。（私有构造器的工具类无法被new出来，因为工具类在使用的时候，需要满足无需初始直接使用）
+
+- 工具类的工具方法必须被static、final关键字修饰。（可保证方法不可变，并且可方便的直接使用）
+
+	※注意：尽量不在工具方法中，对共享变量做修改的操作访问（若必须要做务必加锁），否则会产生线程安全问题。除此之外，工具类方法本身是没有线程安全问题的，可放心使用。
+
+### 1.3.2 Arrays
+
+​		Arrays 主要对数组提供了一些比较高效的操作，如排序、查找、填充、拷贝、相等判断等。
+
+### 1.3.5 面试题
+
+​		**1）工作中有哪些好用的工具类，如何写好一个工具类？**
+
+​		答：好用的工具类：如Arrays的排序、二分查找、Collection的不可变/线程安全集合类、Objects的判空相等判断等工具类。
+
+​				如何写好：工具类满足①工具类构造器必须私有；②使用static final关键字对方法进行修饰。
+
+​		**2）写一个二分查找算法的实现**
+
+​		答：见代码（jdk的Arrays工具类中的binarySearch方法源码）
+
+````java
+// a：我们要搜索的数组，fromIndex：从那里开始搜索，默认是0； toIndex：搜索到何时停止，默认是数组大小
+// key：我们需要搜索的值 c：外部比较器
+private static <T> int binarySearch0(T[] a, int fromIndex, int toIndex,
+                                     T key, Comparator<? super T> c) {
+    // 如果比较器 c 是空的，直接使用 key 的 Comparable.compareTo 方法进行排序
+    // 假设 key 类型是 String 类型，String 默认实现了 Comparable 接口，就可以直接使用 compareTo 方法进行排序
+    if (c == null) {
+        // 这是另外一个方法，使用内部排序器进行比较的方法
+        return binarySearch0(a, fromIndex, toIndex, key);
+    }
+    int low = fromIndex;
+    int high = toIndex - 1;
+    // 开始位置小于结束位置，就会一直循环搜索
+    while (low <= high) {
+        // 假设 low =0，high =10，那么 mid 就是 5，所以说二分的意思主要在这里，每次都是计算索引的中间值
+        int mid = (low + high) >>> 1;
+        T midVal = a[mid];
+        // 比较数组中间值和给定的值的大小关系
+        int cmp = c.compare(midVal, key);
+        // 如果数组中间值小于给定的值，说明我们要找的值在中间值的右边
+        if (cmp < 0)
+            low = mid + 1;
+        // 我们要找的值在中间值的左边
+        else if (cmp > 0)
+            high = mid - 1;
+        else
+        // 找到了
+            return mid; // key found
+    }
+    // 返回的值是负数，表示没有找到
+    return -(low + 1);  // key not found.
+}
+````
+
+​		**3）如果我希望ArrayList初始化之后，不能为修改，怎么做？**
+
+​		答：使用Collections的unmodifiableList的方法，该方法会返回一个不能被修改的内部类集合，这些集合类值开放查询的方法，其他方法重写了，调用则会直接抛出 `UnsupportedOperationException` 异常。
 
 #  第二章 集合
 
 ## 2.1 ArrayList 源码解析和设计思路
+
+​		ArrayList整体架构比较简单，就是一个数组结构，如图：
+
+![img](assets/5d5fc5f80001e20e15080238.png)
+
+​		图中展示是长度为 10 的数组，从 1 开始计数，index 表示数组的下标，从 0 开始计数，elementData 表示数组本身，源码中除了这两个概念，还有以下三个基本概念：
+
+- DEFAULT_CAPACITY 表示数组的初始大小，默认是10；
+- size表示当前数组的大小，类型int，没有使用volatile修饰，非线程安全；
+- modCount统计当前数组被修改的版本次数，数组结构有变动，就会 +1。
+
+​		**类注释**
+
+​		ArrayList源码的类注释：
+
+- 允许put null 值，会自动扩容；
+- size、isEmpty、get、set、add等方法时间复杂度都是O（1）；
+- 是非线程安全的，多线程情况下，推荐使用线程安全类：`Collections.SynchronizedList`；
+- 增强for循环，或者使用迭代器迭代过程中，如果数组大小被改变，会快速失败，抛出异常。
 
 ## 2.2 LinkedList 源码解析
 
