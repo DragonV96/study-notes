@@ -88,7 +88,79 @@ docker rmi -f mysql:latest		(强制删除镜像)
 docker -v
 ````
 
-## 2.1 安装MySQL
+## 2.1 安装Docker
+
+​		Docker 要求 CentOS 系统的内核版本高于 3.10 。
+
+​		1.查看操作系统当前的内核版本
+
+```
+uname -r
+```
+
+​		2.更新yum包到最新
+
+```
+yum update
+```
+
+​		3.卸载旧版本（如果存在旧版本，不存在则跳过）
+
+```
+yum remove docker docker-common docker-selinux docker-engine -y
+```
+
+​		4.安装docker需要的软件，yum-util提供yum-config-manager功能，其他两个是devicemapper驱动依赖的包
+
+```
+yum install -y yum-utils device-mapper-persistent-data lvm2
+```
+
+​		5.配置yum源
+
+```
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo			（阿里云）
+
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo			（官方源）
+
+yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo				（中国科技大学）
+```
+
+​		6.查看所有仓库中所有docker版本，并选择特定版本进行安装
+
+```
+yum list docker-ce --showduplicates | sort -r
+```
+
+​		7.安装docker
+
+```
+yum -y install docker-ce			(默认装最新稳定版)
+```
+
+​		8.启动docker服务
+
+```
+systemctl start docker		(启动)
+systemctl stop docker		(关闭,安装过程不要执行)
+```
+
+​		9.开机启动docker服务
+
+```
+systemctl enable docker		(启动)
+systemctl disable docker	(关闭,安装过程不要执行)
+```
+
+​		10.查看docker版本（有client和server表示docker安装成功）
+
+```
+docker version
+```
+
+## 2.2 安装数据库
+
+### 2.2.1 MySQL
 
 ​		1.在docker仓库中搜索mysql的镜像
 
@@ -102,32 +174,100 @@ docker search mysql
 docker pull mysql
 ```
 
-​		3.运行mysql容器
+​		3.运行mysql容器（运行完显示一串sha256字符）
 
-- **-p 3306:3306**：将容器的 3306 端口映射到主机的 3306 端口。
-- **-v $PWD/conf:/etc/mysql/conf.d**：将主机当前目录下的 conf/my.cnf 挂载到容器的 /etc/mysql/my.cnf。
-- **-v $PWD/logs:/logs**：将主机当前目录下的 logs 目录挂载到容器的 /logs。
-- **-v $PWD/data:/var/lib/mysql** ：将主机当前目录下的data目录挂载到容器的 /var/lib/mysql 。
-- **-e MYSQL_ROOT_PASSWORD=1234：**初始化 root 用户的密码为1234。
+```shell
+docker run --name mysql -p 3306:3306 --restart=always -v /usr/local/mysql/conf:/etc/mysql/conf.d -v /usr/local/mysql/data:/var/lib/mysql -v /usr/local/mysql/log:/logs -e MYSQL_ROOT_PASSWORD=root --privileged=true -d registry.comtom.cn:2443/gd-v5/mysql:5.7.26 --lower_case_table_names=1
 
-```
-docker run -p 3306:3306 --name mysql -v $PWD/conf:/etc/mysql/conf.d -v $PWD/logs:/logs -v $PWD/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=1234 -d mysql
 21cb89213c93d805c5bacf1028a0da7b5c5852761ba81327e6b99bb3ea89930e
 ```
 
-​		4.
+- **-p 3306:3306**：将容器的 3306 端口映射到主机的 3306 端口。
+- **-v /usr/local/mysql/conf:/etc/mysql/conf.d**：将容器的  `/etc/mysql/conf.d` 目录挂载到主机  `/usr/local/mysql/conf` 目录下 。
+- **--privileged=true**：使容器内的root拥有真正的root权限。
+- **-e MYSQL_ROOT_PASSWORD=root**：初始化 root 用户的密码为root。
+- **-e MYSQL_ROOT_PASSWORD=root**：初始化 root 用户的密码为root。
+- **--lower_case_table_names=1**：设置数据库表名为小写。
 
+​		4.进入mysql容器
 
-
-​		7.退出docker中的mysql交互窗口
-
+````shell
+docker exec -it mysql bash
 ````
+
+​		5.执行sql脚本
+
+````shell
+执行宿主机目录的指定sql脚本
+docker exec -i mysql sh -c "exec mysql -uroot -proot" < /usr/local/mysql/xxx.sql
+执行容器内目录的指定sql脚本
+docker exec -i mysql sh -c "exec mysql -uroot -proot < /usr/local/mysql/xxx.sql"
+````
+
+​		6.退出docker中的mysql交互窗口
+
+````shell
 exit
 ````
 
+### 2.2.2 MongoDB
 
+## 2.3 安装中间件
 
-## 2.5 安装Git
+### 2.3.1 RabbitMQ
+
+### 2.3.2 Kafka
+
+​		由于kafka依赖于zookeeper，所以必须先拉取zookeeper的docker镜像。
+
+​		1.下载zookeeper和kafka的镜像
+
+```
+docker pull wurstmeister/zookeeper
+docker pull wurstmeister/kafka
+```
+
+​		2.构建docker-compose.yml
+
+```
+version: '3'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    depends_on: [ zookeeper ]
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.1.158
+      KAFKA_CREATE_TOPICS: "merchant-template"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+        - /usr/local/kafka/docker.sock:/var/run/docker.sock
+```
+
+​		3.在docker-compose.yml文件所在目录进行服务打包
+
+```shell
+docker-compose build
+```
+
+​		4.启动服务
+
+```shell
+docker-compose up -d
+```
+
+### 2.3.1 RocketMQ
+
+### 2.3.4 activeMQ
+
+## 2.4 安装工具
+
+### 2.4.1 Git
 
 ​		1.查看是否安装过git
 
@@ -146,9 +286,67 @@ rpm -e git
 
 ​		3.
 
-## 2.6 安装Redis
+### 2.4.2 安装Jenkins
 
-## 2.7 安装MongoDB
+​		1.下载Jenkins库
+
+```
+wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+```
+
+​		2.导入key
+
+```
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+```
+
+​		3.安装Jenkins
+
+```
+yum install -y jenkins
+```
+
+​		4.启动/停止/查看Jenkins服务（执行启动即可）
+
+```
+systemctl start jenkins				(启动activemq服务)
+systemctl status jenkins				(查看activemq服务状态)
+systemctl stop jenkins				(停止activemq服务)
+```
+
+​		5.因为Jenkins默认端口是8080，可能会导致端口冲突，修改Jenkins的默认端口即可
+
+```
+vim /etc/sysconfig/jenkins
+
+直接输入（搜索关键字）：
+/JENKINS_PORT
+
+按a进入编辑模式，将JENKINS_PORT后的端口改为需要的：
+JENKINS_PORT=8888
+
+先按ESC退出编辑：
+:wq			（保存更改并退出）
+```
+
+​		6.配置防火墙开放Jenkins端口
+
+```
+firewall-cmd --zone=public --add-port=8888/tcp --permanent		(开放8888端口)
+firewall-cmd --reload											(重启防火墙)
+```
+
+​		7.打开浏览器访问`http://虚拟机IP地址:8888`(192.168.241.129:8888)
+
+​		8.在服务器上查看当前的初始化密码
+
+```
+cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+
+
+## 2.6 安装Redis
 
 ## 2.8 安装erlang
 
@@ -307,134 +505,6 @@ firewall-cmd --reload											(重启防火墙)
 ````
 
 ​		8.打开浏览器访问`http://虚拟机IP地址:8161`，账号密码均为`admin`
-
-## 2.11 安装Docker
-
-​		Docker 要求 CentOS 系统的内核版本高于 3.10 。
-
-​		1.查看操作系统当前的内核版本
-
-````
-uname -r
-````
-
-​		2.更新yum包到最新
-
-````
-yum update
-````
-
-​		3.卸载旧版本（如果存在旧版本，不存在则跳过）
-
-````
-yum remove docker docker-common docker-selinux docker-engine -y
-````
-
-​		4.安装docker需要的软件，yum-util提供yum-config-manager功能，其他两个是devicemapper驱动依赖的包
-
-````
-yum install -y yum-utils device-mapper-persistent-data lvm2
-````
-
-​		5.配置yum源
-
-````
-yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo			（阿里云）
-
-yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo			（官方源）
-
-yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo				（中国科技大学）
-````
-
-​		6.查看所有仓库中所有docker版本，并选择特定版本进行安装
-
-````
-yum list docker-ce --showduplicates | sort -r
-````
-
-​		7.安装docker
-
-````
-yum -y install docker-ce			(默认装最新稳定版)
-````
-
-​		8.启动docker服务
-
-````
-systemctl start docker		(启动)
-systemctl stop docker		(关闭,安装过程不要执行)
-````
-
-​		9.开机启动docker服务
-
-````
-systemctl enable docker		(启动)
-systemctl disable docker	(关闭,安装过程不要执行)
-````
-
-​		10.查看docker版本（有client和server表示docker安装成功）
-
-````
-docker version
-````
-
-## 2.12 安装Jenkins
-
-​		1.下载Jenkins库
-
-```
-wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-```
-
-​		2.导入key
-
-````
-rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-````
-
-​		3.安装Jenkins
-
-```
-yum install -y jenkins
-```
-
-​		4.启动/停止/查看Jenkins服务（执行启动即可）
-
-```
-systemctl start jenkins				(启动activemq服务)
-systemctl status jenkins				(查看activemq服务状态)
-systemctl stop jenkins				(停止activemq服务)
-```
-
-​		5.因为Jenkins默认端口是8080，可能会导致端口冲突，修改Jenkins的默认端口即可
-
-```
-vim /etc/sysconfig/jenkins
-
-直接输入（搜索关键字）：
-/JENKINS_PORT
-
-按a进入编辑模式，将JENKINS_PORT后的端口改为需要的：
-JENKINS_PORT=8888
-
-先按ESC退出编辑：
-:wq			（保存更改并退出）
-```
-
-​		6.配置防火墙开放Jenkins端口
-
-```
-firewall-cmd --zone=public --add-port=8888/tcp --permanent		(开放8888端口)
-firewall-cmd --reload											(重启防火墙)
-```
-
-​		7.打开浏览器访问`http://虚拟机IP地址:8888`(192.168.241.129:8888)
-
-​		8.在服务器上查看当前的初始化密码
-
-````
-cat /var/lib/jenkins/secrets/initialAdminPassword
-````
 
 ## 2.13 安装fastDFS
 
