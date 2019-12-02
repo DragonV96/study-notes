@@ -158,9 +158,41 @@ systemctl disable docker	(关闭,安装过程不要执行)
 docker version
 ```
 
-## 2.2 安装数据库
+## 2.2 安装Docker-compose
 
-### 2.2.1 MySQL
+​		Docker-compose 要求docker的内核版本高于 1.19 。
+
+​		1.查看当前docker的内核版本
+
+```
+docker version
+```
+
+​		2.进入docker-compose的github官方release页面：[点我跳转](https://github.com/docker/compose/releases)
+
+​		3.下载[docker-compose-Linux-x86_64](https://github.com/docker/compose/releases/download/1.25.0/docker-compose-Linux-x86_64)
+
+​		4.上传到 `/usr/local/bin` 目录下，然后重命名为 `docker-compose`
+
+```
+mv docker-compose-Linux-x86_64 docker-compose
+```
+
+​		5.赋予 `docker-compose` 文件root权限
+
+```
+chmod +x /usr/local/bin/docker-compose
+```
+
+​		6.查看 `docker-compose` 版本
+
+```
+docker-compose version
+```
+
+## 2.3 安装数据库
+
+### 2.3.1 MySQL
 
 ​		1.在docker仓库中搜索mysql的镜像
 
@@ -210,13 +242,13 @@ docker exec -i mysql sh -c "exec mysql -uroot -proot < /usr/local/mysql/xxx.sql"
 exit
 ````
 
-### 2.2.2 MongoDB
+### 2.3.2 MongoDB
 
-## 2.3 安装中间件
+## 2.4 安装中间件
 
-### 2.3.1 RabbitMQ
+### 2.4.1 RabbitMQ
 
-### 2.3.2 Kafka
+### 2.4.2 Kafka
 
 ​		由于kafka依赖于zookeeper，所以必须先拉取zookeeper的docker镜像。
 
@@ -261,13 +293,13 @@ docker-compose build
 docker-compose up -d
 ```
 
-### 2.3.1 RocketMQ
+### 2.4.3 RocketMQ
 
-### 2.3.4 activeMQ
+### 2.4.4 activeMQ
 
-## 2.4 安装工具
+## 2.5 安装自动化工具
 
-### 2.4.1 Git
+### 2.5.1 Git
 
 ​		1.查看是否安装过git
 
@@ -286,7 +318,7 @@ rpm -e git
 
 ​		3.
 
-### 2.4.2 安装Jenkins
+### 2.5.2 安装Jenkins
 
 ​		1.下载Jenkins库
 
