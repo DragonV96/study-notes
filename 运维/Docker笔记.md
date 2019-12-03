@@ -1,8 +1,10 @@
 <h1 style="font-weight:bold;"><center>Docker学习笔记</center></h1>
 
-# 第一章 Docker基本命令
+# 第一章 基本命令
 
-## 1.1 查看容器相关命令
+## 1.1 Docker命令
+
+### 1.1.1 查看容器相关命令
 
 ​		1.查看docker正在运行的容器情况
 
@@ -16,7 +18,16 @@ docker ps
 docker images
 ```
 
-## 1.2 容器操作相关命令
+​		3.查看docker指定容器日志
+
+```
+docker logs -f [容器名]
+
+实例：
+docker logs -f mysql
+```
+
+### 1.1.2 容器操作相关命令
 
 ​		1.在容器里开启一个mysql伪终端交互
 
@@ -45,7 +56,7 @@ docker save -o [镜像文件完整路径及命名] [当前镜像标签名]
 docker save -o /usr/local/comtom/dockerimages/rabbitmq.tar registry.comtom.cn:2443/gd-v5/rabbitmq:3.8.0
 ````
 
-## 1.3 删除容器及镜像(以mysql为例)
+### 1.1.3 删除容器及镜像(以mysql为例)
 
 ​		1.查看docker正在运行的容器情况
 
@@ -79,6 +90,62 @@ docker rmi mysql:latest
 
 docker rmi -f mysql:latest		(强制删除镜像)
 ````
+
+## 1.2 Docker-compose命令
+
+### 1.2.1 查看容器相关命令
+
+​		1.查看docker-compose中正在运行的容器情况
+
+```
+docker-compose ps
+```
+
+​		2.查看docker-compose中已安装的镜像情况
+
+```
+docker-compose images
+```
+
+​		3.查看docker-compose日志
+
+```
+docker-compose logs -f
+```
+
+### 1.1.2 容器操作相关命令
+
+​		1.在容器里开启一个mysql伪终端交互
+
+```
+docker-compose exec [容器名] bash
+
+实例：
+docker-compose exec mysql bash
+```
+
+### 1.1.3 删除容器
+
+​		1.查看docker-compose正在运行的容器情况
+
+```
+docker-compose ps
+```
+
+![1575355859561](assets/1575355859561.png)
+
+​		2.停止运行docker-compose容器
+
+```
+docker-compose stop
+```
+
+​		3.删除docker-compose容器
+
+```
+docker-compose rm
+y
+```
 
 # 第二章 Docker安装镜像及使用
 
@@ -160,7 +227,7 @@ docker version
 
 ## 2.2 安装Docker-compose
 
-​		Docker-compose 要求docker的内核版本高于 1.19 。
+​		Docker-compose 要求docker的内核版本高于所对应的docker最低版本 。
 
 ​		1.查看当前docker的内核版本
 
@@ -261,7 +328,7 @@ docker pull wurstmeister/kafka
 
 ​		2.构建docker-compose.yml
 
-```
+```yaml
 version: '3'
 services:
   zookeeper:
@@ -275,11 +342,15 @@ services:
       - "9092:9092"
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 192.168.1.158
-      KAFKA_CREATE_TOPICS: "merchant-template"
+      KAFKA_CREATE_TOPICS: "merchant-template:1:1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
         - /usr/local/kafka/docker.sock:/var/run/docker.sock
 ```
+
+- **KAFKA_ADVERTISED_HOST_NAME** 配置kafka服务器ip地址
+- **KAFKA_CREATE_TOPICS** 配置kafka默认的topics
+- **KAFKA_ZOOKEEPER_CONNECT** 配置zookeeper的地址和端口
 
 ​		3.在docker-compose.yml文件所在目录进行服务打包
 
@@ -292,6 +363,25 @@ docker-compose build
 ```shell
 docker-compose up -d
 ```
+
+​		5.进入kafka伪终端
+
+````shell
+docker exec -it kafka_kafka_1 bash
+````
+
+​		6.修改kafka配置**（否则外网无法访问）**
+
+````shell
+cd /opt/kafka_2.12-2.3.0/config/
+vi  server.properties
+
+搜索advertised
+/advertised
+
+将ip:9092中的ip改为自己的服务器ip地址
+advertised.listeners=PLAINTEXT://ip:9092
+````
 
 ### 2.4.3 RocketMQ
 
