@@ -30,7 +30,83 @@ rm -rf 目录名字
 rm -f 文件名字
 ````
 
-## 1.3 安装centos必备库
+## 1.3 查找
+
+​		**1.查找文件**
+
+````shell
+find    可以找到你想要的文件
+格式：  find [目录] [选项] [选项值]
+目录：去哪找，可以不写，默认代表当前目录
+选项：怎么找
+    >> -name   按照名字找
+        可以使用通配符
+    -size   按照大小找
+        单位为  kmg   10k（等于10k）   +10k（大于10k）   -10k（小于10k）
+    -user   按照用户名
+    -group  按照组名
+    -maxdepth  -mindepth   限制查找的目录层级，默认递归查找所有
+    -ctime  按照创建时间查找  单位是天
+选项值：找什么
+    find / -name demo.txt
+    find / -name \*.txt
+    find / -size +10k
+    find / -user demo.txt
+    find / -group demo.txt
+    find / -mindepth 4 -name \*.txt
+    find / -mindepth 3 -maxdepth 5 -name \*.txt
+````
+
+
+
+​		**2.查找文件内容**
+
+````shell
+grep   查找的内容   文件路径
+
+实例：
+grep movie demo.txt
+grep movie ~/*.txt
+
+选项
+    --color=auto   将颜色高亮显示
+        给 grep 指令起一个别名   vi ~/.bashrc
+        添加一行     alias grep='grep --color=auto'
+        让配置文件立即生效       source ~/.bashrc
+    -c         得到内容的个数
+    -i         不区分大小写的查找
+    -n         显示在文档中的行号
+    -r         递归查找，但是不能限制后缀，只能遍历所有
+        grep -r that ~/*
+    -l         只显示文件名，不显示内容
+
+实例：（显示当前目录下所有txt文件中含有xxx字段的文件）
+grep -l xxx ~/test/*.txt
+
+正则表达式进行查找
+    \w(数字字母下划线)   
+    \W(除了上面)
+    \d(数字)
+    \D(非数字)
+    .(除了换行符)
+    *(任意多个)
+    +(至少1个)
+    ?(0个或者1个)
+    te-st@163.com   abc_def@qq.com   lala@sina.cn   benben@meme.net
+    
+实例：（-E   使用正则表达式来进行匹配）
+grep -E .*? demo.txt 
+
+grep --color=auto [要查找的关键字] [要查找的文件]
+
+实例：
+grep --color=auto 56684444sva server.log
+grep --color=auto 56684444sva *.log
+````
+
+
+
+## 1.4 安装centos必备库
 
 ​		**1.使用yum安装gcc**
 
