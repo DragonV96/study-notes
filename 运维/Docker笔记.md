@@ -245,7 +245,7 @@ docker version
 mv docker-compose-Linux-x86_64 docker-compose
 ```
 
-​		5.赋予 `docker-compose` 文件root权限
+​		5.赋予 `docker-compose` 文件root权限
 
 ```
 chmod +x /usr/local/bin/docker-compose
@@ -310,6 +310,64 @@ exit
 ````
 
 ### 2.3.2 MongoDB
+
+### 2.3.3 Hbase
+
+​		1.在docker仓库中搜索hbase的镜像
+
+```
+docker search hbase
+```
+
+​		2.下载hbase镜像
+
+```
+docker pull harisekhon/hbase
+```
+
+​		3.运行hbase容器（运行完显示一串sha256字符）
+
+```shell
+docker run --name hbase --net=host -h docker-hbase -d harisekhon/hbase
+
+21cb89213c93d805c5bacf1028a0da7b5c5852761ba81327e6b99bb3ea89930e
+```
+
+- **--name hbase**：容器名字。
+- **--net=host**：主机模式运行，容器和服务器共用一个网卡，即容器直接使用服务器的端口 。
+- **-h docker-hbase**：设置容器的host为docker-hbase。
+- **-d**：后台运行。
+
+​		4.进入mysql容器
+
+```shell
+docker exec -it hbase bash
+```
+
+​		5.设置host
+
+```shell
+进入并编辑hosts文件
+vi /etc/hosts
+
+添加如下字符到最后一行（按a进入编辑模式）
+127.0.0.1 docker-hbase
+
+退出并保存
+:wq
+```
+
+​		6.进入hbase控制台
+
+```shell
+hbase shell
+```
+
+​		7.退出docker中的mysql交互窗口
+
+```shell
+exit
+```
 
 ## 2.4 安装中间件
 
