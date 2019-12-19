@@ -306,7 +306,7 @@ public void testCatchFinally() {
 
 ​		**【附加基础】**
 
-​		在多核CPU下，线程在拿值时为提高效率，是直接和CPU缓存打交道的，而不是内存。主要是因为CPU缓存执行速度更快。（比如线程要拿C的值，会直接从CPU的缓存中拿，CPUT缓存中没有，则从内存中拿，所以**线程的读操作永远都是拿CPU缓存的值**）
+​		在多核CPU下，线程在拿值时为提高效率，是直接和CPU缓存打交道的，而不是内存。主要是因为CPU缓存执行速度更快。（比如线程要拿C的值，会直接从CPU的缓存中拿，CPU缓存中没有，则从内存中拿，所以**线程的读操作永远都是拿CPU缓存的值**）
 
 ​		此时会产生一个问题，CPU缓存中的值和内存中的值可能并不是时刻都是同步的，导致线程计算的值可能不是最新的，共享变量的值有可能已经被其他线程修改掉了，但此时修改的是机器内存的值，而CPU缓存的值还是老的，导致其他线程的计算结果出错。
 
@@ -376,6 +376,130 @@ public void testCatchFinally() {
 
 ​		Arrays 主要对数组提供了一些比较高效的操作，如排序、查找、填充、拷贝、相等判断等。
 
+​		**1）二分查找法**
+
+​		`Arrays.binarySearch` 方法主要用于快速从数组中查找出对应的值，返回参数是数组下标值，若查不到则返回负数。
+
+![img](assets/5d5fc4a400010d4106820685.png)
+
+​		需要注意：
+
+- 如果被搜索的数组是无序的，必须先排序，否则二分搜索可能搜不到。
+- 搜索方法返回的数组的下标值，若搜不到则返回负数，此时需要对数组下标值进行负判断，否则直接使用负数的下标值会报数组越界错误。
+
+​		二分底层代码的实现：
+
+````java
+// a：我们要搜索的数组，fromIndex：从那里开始搜索，默认是0； toIndex：搜索到何时停止，默认是数组大小
+// key：我们需要搜索的值 c：外部比较器
+private static <T> int binarySearch0(T[] a, int fromIndex, int toIndex,
+                                     T key, Comparator<? super T> c) {
+    // 如果比较器 c 是空的，直接使用 key 的 Comparable.compareTo 方法进行排序
+    // 假设 key 类型是 String 类型，String 默认实现了 Comparable 接口，就可以直接使用 compareTo 方法进行排序
+    if (c == null) {
+        // 这是另外一个方法，使用内部排序器进行比较的方法
+        return binarySearch0(a, fromIndex, toIndex, key);
+    }
+    int low = fromIndex;
+    int high = toIndex - 1;
+    // 开始位置小于结束位置，就会一直循环搜索
+    while (low <= high) {
+        // 假设 low =0，high =10，那么 mid 就是 5，所以说二分的意思主要在这里，每次都是计算索引的中间值
+        int mid = (low + high) >>> 1;
+        T midVal = a[mid];
+        // 比较数组中间值和给定的值的大小关系
+        int cmp = c.compare(midVal, key);
+        // 如果数组中间值小于给定的值，说明我们要找的值在中间值的右边
+        if (cmp < 0)
+            low = mid + 1;
+        // 我们要找的值在中间值的左边
+        else if (cmp > 0)
+            high = mid - 1;
+        else
+        // 找到了
+            return mid; // key found
+    }
+    // 返回的值是负数，表示没有找到
+    return -(low + 1);  // key not found.
+}
+````
+
+​		**2）拷贝**
+
+​		数组拷贝很常见，入 `ArrayList` 在执行 `add` （扩容）或 `remove` （删除元素不是最后一个）操作时，会进行拷贝。拷贝整个数组可以使用 `copyOf` 方法，拷贝部分可以用 `copyOfRange` 方法，下面是 `copyOfRange` 底层源码实现。
+
+````java
+// original 原始数组数据
+// from 拷贝起点
+// to 拷贝终点
+public static char[] copyOfRange(char[] original, int from, int to) {
+    // 需要拷贝的长度
+    int newLength = to - from;
+    if (newLength < 0)
+        throw new IllegalArgumentException(from + " > " + to);
+    // 初始化新数组
+    char[] copy = new char[newLength];
+    // 调用 native 方法进行拷贝，参数的意思分别是：
+    // 被拷贝的数组、从数组那里开始、目标数组、从目的数组那里开始拷贝、拷贝的长度
+    System.arraycopy(original, from, copy, 0,
+                     Math.min(original.length - from, newLength));
+    return copy;
+}
+````
+
+​		实际上底层调用的是 `System.arraycopy` 这个 `native` 方法。
+
+### 1.3.3 Collections
+
+​		Collections 是为了方便使用集合的工具类。（Arrays 是方便数组使用的工具类）
+
+​		Collections 提供了 `sort` 和 `binarySearch` 方法
+
+​		**1）求集合中的最大/小值**
+
+![img](assets/5d5fc50a0001220c19701126.png)
+
+- max 方法泛型 T 必须继承 `Object` 类并实现 `Comparable` 接口
+- 自定义类实现 `Comparable` 接口和传入外部排序器
+
+​		**2）线程安全的集合**
+
+![1576741309161](assets/1576741309161.png)
+
+​		线程安全的集合方法都是 `synchronized` 开头的，底层通过 `synchronized` 轻量锁来实现的，下面是 `synchronizedList` 类的底层实现。
+
+![img](assets/5d5fc55a0001a96b14201306.png)
+
+​		`synchronizedList` 类的所有操作方法都加上了 `synchronized` 锁，所以是线程安全的。
+
+​		**3）不可变集合**
+
+​		不可变集合的类都是以 `Unmodifiable` 开头的。从原集合中得到的一个不可变的新集合后，此新集合**只能访问，无法修改**；一旦修改则会抛出异常。不可变集合只开放了查询方法，其余任何修改操作都会抛出 `UnsupportedOperationException` 异常，下面是 `UnmodifiableList` 类的源码。
+
+![img](assets/5d5fc56c000106c613981318.png)
+
+### 1.3.4 Objects
+
+​		Object类是所有类的父类，常用到的两个方法就是相等判断和空判断。
+
+​		**1）相等判断**
+
+​		Objects提供 `equals` 和 `deepEquals` 两个方法来进行相等判断
+
+- equals 判断基本类型和自定义类
+- deepEquals 用来判断数组的类型
+
+![img](assets/5d5fc5830001b26a23601336.png)
+
+​		**2）为空判断**
+
+![img](assets/5d5fc59b00010ebc10820386.png)
+
+​		上图是 `Object` 类的为空判断方法
+
+- isNull 对于对象是否为空返回对应的 `boolean` 值
+- requireNonNull 方法更加严格，如果一旦为空，则会抛出异常
+
 ### 1.3.5 面试题
 
 ​		**1）工作中有哪些好用的工具类，如何写好一个工具类？**
@@ -441,7 +565,7 @@ private static <T> int binarySearch0(T[] a, int fromIndex, int toIndex,
 - size表示当前数组的大小，类型int，没有使用volatile修饰，非线程安全；
 - modCount统计当前数组被修改的版本次数，数组结构有变动，就会 +1。
 
-​		**类注释**
+### 2.1.1 类注释
 
 ​		ArrayList源码的类注释：
 
@@ -449,6 +573,47 @@ private static <T> int binarySearch0(T[] a, int fromIndex, int toIndex,
 - size、isEmpty、get、set、add等方法时间复杂度都是O（1）；
 - 是非线程安全的，多线程情况下，推荐使用线程安全类：`Collections.SynchronizedList`；
 - 增强for循环，或者使用迭代器迭代过程中，如果数组大小被改变，会快速失败，抛出异常。
+
+### 2.1.2 初始化
+
+​		初始化 `ArrayList` 有三种方式：①无参初始化；②指定大小初始化；③指定初数据初始化。源码如下：
+
+````java
+private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+//无参数直接初始化，数组大小为空
+public ArrayList() {
+    this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+}
+
+// 指定初始数据初始化
+public ArrayList(Collection<? extends E> c) {
+    //elementData 是保存数组的容器，默认为 null
+    elementData = c.toArray();
+    // 如果给定的集合（c）数据有值
+    if ((size = elementData.length) != 0) {
+        // c.toArray might (incorrectly) not return Object[] (see 6260652)
+        // 如果集合元素类型不是 Object 类型，我们会转成 Object
+        if (elementData.getClass() != Object[].class) {
+            elementData = Arrays.copyOf(elementData, size, Object[].class);
+        }
+    } else {
+        // 给定集合（c）无值，则默认空数组
+        this.elementData = EMPTY_ELEMENTDATA;
+    }
+}
+````
+
+​		※注意：
+
+- ArrayList 无参构造器初始化时，默认大小是空数组，并不是10，10是在第一次进行 `add` 操作的时候扩容的数组值
+- 指定初始化据初始化时有一条 `see 6260652` 的注释，这是Java的一个bug：当给定集合内的元素不是 `Object` 类型时，会转化为 `Object` 的类型，一般情况下不会触发此bug，只有在下列场景下才会触发：`ArrayList` 初始化之后（`ArrayList` 元素不是 `Object`类型），再次调用 `toArray` 方法，得到 `Object` 数组，并且往  `Object` 数组赋值时，才会触发此bug，示例如下图（此bug在`java9` 中已修复）
+
+![img](assets/5d5fc6100001109518100714.png)
+
+### 2.1.3 新增和扩容实现
+
+
 
 ## 2.2 LinkedList 源码解析
 
