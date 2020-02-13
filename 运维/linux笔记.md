@@ -1,5 +1,4 @@
 <h1 style="font-weight:bold;"><center>Linux学习笔记(Cent OS7)</center></h1>
-
 # 第一章 常用命令
 
 ## 1.1 创建
@@ -259,6 +258,24 @@ chmod +x deploy-network.sh
 
 实例：
 ./deploy-network.sh
+````
+
+## 1.11 添加快捷操作
+
+​		**1. 添加快捷操作**（如任意位置启动nginx）
+
+````
+第一步：执行命令编辑.bashrc文件
+vim ~/.bashrc
+或
+vi ~/.bashrc
+
+第二步：按a进入编辑状态，新起一行输入（路径根据自己实际情况设定）：
+alias nginx="bash /usr/local/nginx/sbin/nginx"
+
+第三步：按下ESC，然后输入:wq保存更改并退出
+第四步：执行命令使更改生效
+source ~/.bashrc
 ````
 
 
