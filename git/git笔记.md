@@ -1,5 +1,4 @@
 <h1 style="font-weight:bold;"><center>git学习笔记</center></h1>
-
 # 第一章 常用命令
 
 ![1571121419790](assets/1571121419790.png)
@@ -240,4 +239,90 @@ git config --local user.name 'xxx'
 git config --local user.email 'xxx@xx.com'
 ```
 
-​	
+## 2.2 配置项目同时提交到github和gitee
+
+​		**前提：已经在gitee上导入github项目。**
+
+![image-20200123163017591](assets/image-20200123163017591.png)
+
+### 2.2.1 本地只有一个ssh-key的情况
+
+​		**方法一：多次推送**
+
+| 优点                           | 缺点                           |
+| ------------------------------ | ------------------------------ |
+| 可推送到指定的一个或多个仓库   | 推送仓库数量较多时，时间成本高 |
+| 可不推送到指定的一个或多个仓库 |                                |
+
+​		（1）通过执行过命令将本地项目和gitee项目关联**（步骤一和步骤二选一个执行即可）**
+
+````
+git remote add [name] [码云/github项目地址]
+
+实例：
+git remote add github https://github.com/DragonV96/order-system-seller.git
+````
+
+​		（2）通过修改本地项目的配置文件将本地项目和gitee项目关联**（步骤一和步骤二选一个执行即可）**
+
+- 进入本地git项目文件夹
+
+![image-20200123131354247](assets/image-20200123131354247.png)
+
+- 进入 `.git` 隐藏文件夹
+
+![image-20200123131507348](assets/image-20200123131507348.png)
+
+- 编辑 `.git` 目录下的 `config` 文件（可以看到git给远程库起的默认名称是 `origin` ，但如果有多个远程库，则需要不同的名称来标识不同的远程库）
+
+![image-20200123184242078](assets/image-20200123184242078.png)
+
+​		（3）执行命令查看配置的两个仓库
+
+````shell
+git remote
+````
+
+​		（4）推送代码时，需要**对两个仓库分别执行一次push命令**
+
+````
+git push github master
+git push gitee master
+````
+
+​		**方法二：一次推送**
+
+​		（1）通过命令将码云项目地址添加到本地已有的remote下**（步骤一和步骤二选一个执行即可）**
+
+````
+git remote set-url --add origin [码云项目地址]
+
+实例：
+git remote set-url --add origin https://gitee.com/glwsource/order-system-seller.git
+````
+
+​		（2）通过修改本地项目的配置文件**（步骤一和步骤二选一个执行即可）**
+
+![image-20200123203748462](assets/image-20200123203748462.png)
+
+​		（3）推送只需一条命令
+
+````
+git push
+````
+
+​		（4）推送的时候可能会出现错误 `[rejected] master -> master (fetch first)`，此时执行强制推送命令
+
+````
+git push -f
+````
+
+​		（5）若步骤4仍然无法解决错误，则输入命令
+
+````
+git pull --rebase origin master
+git push
+````
+
+### 2.2.2 本地有多个ssh-key的情况
+
