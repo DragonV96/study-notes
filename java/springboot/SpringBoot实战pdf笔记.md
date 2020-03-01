@@ -208,3 +208,12 @@ mvn install:install-file -DgroupId=com.oracle "-DartifactId=ojdbc14" "-Dversion=
 - @Resource：JSR-250提供的注解。
 
 ​	@Autowired、@Inject、@Resource可注解在set方法上或者属性上，注解在属性上可使代码更少、层次更清晰。
+
+​		**Spring IOC原理拆解图**
+
+![1583046882582](assets/1583046882582.png)
+
+​		**Spring MVC原理拆解图**
+
+![1583047634233](assets/1583047634233.png)
+
