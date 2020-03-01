@@ -270,3 +270,10 @@ demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=peer3
 
 ## 5.1 Hystrix Dashboard
 
+
+
+
+
+zuul的生命周期
+
+![1582987858514](assets/1582987858514.png)
