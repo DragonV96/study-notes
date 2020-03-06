@@ -73,8 +73,8 @@ docker save -o /usr/local/comtom/dockerimages/svr-api.tar registry.comtom.cn:244
 docker save -o /usr/local/comtom/dockerimages/gbstar_gbcsa.tar registry.comtom.cn:2443/gd-v5/gbstar_gbcsa:0.1
 docker save -o /usr/local/comtom/dockerimages/gbstar_gbcsc.tar registry.comtom.cn:2443/gd-v5/gbstar_gbcsc:0.1
 docker save -o /usr/local/comtom/dockerimages/gbstar_tbss.tar registry.comtom.cn:2443/gd-v5/gbstar_tbss:0.1
-docker save -o /usr/local/comtom/dockerimages/gbstar_tbas-service.tar registry.comtom.cn:2443/gd-v5/gbstar_tbas-service:0.1
-docker save -o /usr/local/comtom/dockerimages/gbstar_tbsc-service.tar registry.comtom.cn:2443/gd-v5/gbstar_tbsc-service:0.1
+docker save -o /usr/local/comtom/dockerimages/gbstar_tbas-service.tar registry.comtom.cn:2443/gd-v5/gbstar_tbas-service:5.0.2
+docker save -o /usr/local/comtom/dockerimages/gbstar_tbsc-service.tar registry.comtom.cn:2443/gd-v5/gbstar_tbsc-service:5.0.2
 docker save -o /usr/local/comtom/dockerimages/gbstar_tbapi-service.tar registry.comtom.cn:2443/gd-v5/gbstar_tbapi-service:0.1
 ````
 
@@ -83,7 +83,7 @@ docker save -o /usr/local/comtom/dockerimages/gbstar_tbapi-service.tar registry.
 修改IP
 
 ````
-vi /etc/sysconfig/network-scripts/ifcfg-ens33
+vi /etc/sysconfig/network-scripts/ifcfg-ens01
 vim /etc/sysconfig/network-scripts/ifcfg-ens33
 service network restart
 
@@ -103,9 +103,9 @@ DEVICE=enp1s0
 ONBOOT=yes
 
 
-IPADDR=192.168.111.233
+IPADDR=192.168.200.233
 NETMASK=255.255.255.0
-GATEWAY=192.168.111.254
+GATEWAY=192.168.200.254
 
 PREFIX=24
 DNS1=192.168.102.2
@@ -199,8 +199,8 @@ docker push registry.comtom.cn:2443/gd-v5/svr-api:5.0.1
 docker push registry.comtom.cn:2443/gd-v5/gbstar_gbcsa:0.1
 docker push registry.comtom.cn:2443/gd-v5/gbstar_gbcsc:0.1
 docker push registry.comtom.cn:2443/gd-v5/gbstar_tbss:0.1
-docker push registry.comtom.cn:2443/gd-v5/gbstar_tbas-service:0.1
-docker push registry.comtom.cn:2443/gd-v5/gbstar_tbsc-service:0.1
+docker push registry.comtom.cn:2443/gd-v5/gbstar_tbas-service:5.0.2
+docker push registry.comtom.cn:2443/gd-v5/gbstar_tbsc-service:5.0.2
 docker push registry.comtom.cn:2443/gd-v5/gbstar_tbapi-service:0.1
 ````
 
