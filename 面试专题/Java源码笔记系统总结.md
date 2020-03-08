@@ -549,7 +549,7 @@ private static <T> int binarySearch0(T[] a, int fromIndex, int toIndex,
 
 ​		**3）如果我希望ArrayList初始化之后，不能为修改，怎么做？**
 
-​		答：使用Collections的unmodifiableList的方法，该方法会返回一个不能被修改的内部类集合，这些集合类值开放查询的方法，其他方法重写了，调用则会直接抛出 `UnsupportedOperationException` 异常。
+​		答：使用Collections的unmodifiableList的方法，该方法会返回一个不能被修改的内部类集合，这些集合类值开放查询的方法，其他方法重写了，调用则会直接抛出 `UnsupportedOperationException` 异常。
 
 #  第二章 集合
 
@@ -613,7 +613,67 @@ public ArrayList(Collection<? extends E> c) {
 
 ### 2.1.3 新增和扩容实现
 
+​		向数组中添加元素主要分成两步：
 
+- 判断是否需要扩容，若需要则扩容
+- 直接赋值
+
+​		添加元素源码如下：
+
+````java
+public boolean add(E e) {
+  //确保数组大小是否足够，不够执行扩容，size 为当前数组的大小
+  ensureCapacityInternal(size + 1);  // Increments modCount!!
+  //直接赋值，线程不安全的
+  elementData[size++] = e;
+  return true;
+}
+````
+
+​		扩容的源码：
+
+````java
+private void ensureCapacityInternal(int minCapacity) {
+  //如果初始化数组大小时，有给定初始值，以给定的大小为准，不走 if 逻辑
+  if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+    minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
+  }
+  //确保容积足够
+  ensureExplicitCapacity(minCapacity);
+}
+private void ensureExplicitCapacity(int minCapacity) {
+  //记录数组被修改
+  modCount++;
+  // 如果我们期望的最小容量大于目前数组的长度，那么就扩容
+  if (minCapacity - elementData.length > 0)
+    grow(minCapacity);
+}
+//扩容，并把现有数据拷贝到新的数组里面去
+private void grow(int minCapacity) {
+  int oldCapacity = elementData.length;
+  // oldCapacity >> 1 是把 oldCapacity 除以 2 的意思
+  int newCapacity = oldCapacity + (oldCapacity >> 1);
+
+  // 如果扩容后的值 < 我们的期望值，扩容后的值就等于我们的期望值
+  if (newCapacity - minCapacity < 0)
+    newCapacity = minCapacity;
+
+  // 如果扩容后的值 > jvm 所能分配的数组的最大值，那么就用 Integer 的最大值
+  if (newCapacity - MAX_ARRAY_SIZE > 0)
+    newCapacity = hugeCapacity(minCapacity);
+ 
+  // 通过复制进行扩容
+  elementData = Arrays.copyOf(elementData, newCapacity);
+}jva
+````
+
+​		※注意：
+
+- 扩容的大小是原来容量的1.5倍
+- ArrayList中的数组的最大值是 `Integer.MAX_VALUE` ，超过这个值，JVM就不会给数组分配内存空间了
+- 添加操作时
+
+​		**1）**
 
 ## 2.2 LinkedList 源码解析
 
