@@ -22,10 +22,29 @@ docker images
 
 ```
 docker logs -f [容器名]
+docker logs -ft --tail [n行] [容器名]
 
 实例：
 docker logs -f mysql
+docker logs -ft --tail 300 mysql
 ```
+
+​		4.查看容器启动命令
+
+- 在容器外部
+
+````
+docker inspect [容器名]
+
+实例：
+docker inspect mysql
+````
+
+- 在容器内部【前提：需要容器内支持ps命令】（1号进程就是启动命令）
+
+````
+ps -fe
+````
 
 ### 1.1.2 容器操作相关命令
 
