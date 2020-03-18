@@ -42,7 +42,7 @@
 
 ### 集合
 
-### 并发
+### [并发](https://github.com/DragonV96/study-notes/blob/master/java/并发.md)
 
 ### JVM
 
