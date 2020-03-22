@@ -113,17 +113,17 @@ TCP协议组成：
 
 **第一次挥手**
 
-客户端发送FIN包（seq=j），关闭客户端到服务器的数据传送，并进入FIN_WAIT_1状态
+客户端发送FIN包（seq=u），关闭客户端到服务器的数据传送，并进入FIN_WAIT_1状态
 
 **第二次挥手**
 
-服务器收到FIN包，回发一个ACK（seq=j+1）确认包，并进入CLOSE_WAIT状态
+服务器收到FIN包，回发一个ACK（seq=v,ack=u+1）确认包，并进入CLOSE_WAIT状态，此时客户端进入FIN_WAIT_2状态
 
 **第三次挥手**
 
-服务器关闭客户端的连接，发送一个FIN包（seq=k）给客户端，并进入LAST_ACK状态
+服务器关闭客户端的连接，发送一个FIN包（seq=w,ack=u+1）给客户端，并进入LAST_ACK状态
 
 **第四次挥手**
 
-客户端收到FIN包后进入TIME_WAIT状态，立即回发ACK确认包（seq=k+1）给服务器，服务器校验序号后进入CLOSED状态，连接关闭成功
+客户端收到FIN包后立即回发ACK确认包（seq=u+1,ack=w+1）给服务器，并进入TIME_WAIT状态，服务器校验序号后双方进入CLOSED状态，连接关闭成功
 
