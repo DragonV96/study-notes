@@ -1,13 +1,13 @@
 # 日志
 
-## binlog二进制日志
+## 1 binlog二进制日志
 
-### 1 开启binlog日志
+### 1.1 开启binlog日志
 
-1. 在 /etc/my.cnf 中的[mysql]下增加如下配置
+1. 在 /etc/my.cnf 中的[mysqld]下增加如下配置
 
 ````
-[mysql]
+[mysqld]
 # Server Id.数据库服务器id，用来在主从服务器中标记唯一mysql服务器
 server_id=1918
 # 打开binlog
@@ -24,7 +24,7 @@ systemctl restart mysqld
 docker restart mysql
 ````
 
-### 2 查看binlog信息
+### 1.2 查看binlog信息
 
 - 查看binlog开关
 
@@ -38,7 +38,31 @@ show variables like 'log_bin';
 show variables like 'binlog_format';
 ```
 
-### 3 管理binlog
+- 查看binlog相关的SQL语句
+
+````sql
+show binlog events [IN 'log_name'] [FROM pos] [LIMIT [offset,]row_count]
+
+实例：
+-- 查看第一个binlog日志
+show binlog events;
+
+-- 查看指定的binlog日志
+show binlog events in 'binlog.000030';
+
+-- 查看从指定位置开始的指定binlog日志
+show binlog events in 'binlog.000030' from 922;
+
+-- 查看从指定位置开始的指定binlog日志，限制查看的条数
+show binlog events in 'binlog.000030' from 922 limit 2;
+
+-- 查看从指定位置开始的指定binlog日志，限制查看的条数，且带有偏移
+show binlog events in 'binlog.000030' from 922 limit 1,2;
+````
+
+
+
+### 1.3 管理binlog
 
 - 查看所有binlog的日志列表
 
