@@ -21,7 +21,7 @@
 - [数据库](#数据库)
 - [中间件](#中间件)
   - [消息队列](#消息队列)
-  - [nosql中间件](#nosql中间件)
+  - [缓存中间件](#缓存中间件)
 - [数据结构与算法](#数据结构与算法)
   - [数据结构](#数据结构)
   - [算法](#算法)
@@ -108,7 +108,7 @@
 - [消息队列学习笔记](https://github.com/DragonV96/study-notes/blob/master/中间件/消息队列/消息队列学习笔记.md)
 - [消息队列面试笔记](https://github.com/DragonV96/study-notes/blob/master/中间件/消息队列/消息队列面试笔记.md)
 
-### nosql中间件
+### 缓存中间件
 
 - [Redis学习笔记](https://github.com/DragonV96/study-notes/blob/master/中间件/nosql数据库/Redis学习笔记.md)
 - MongoDB学习笔记
