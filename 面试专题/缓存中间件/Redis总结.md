@@ -1,3 +1,11 @@
+- [1 缓存](#1-缓存)
+  - [1.1 缓存作用](#11-缓存作用)
+  - [1.2 缓存带来的问题](#12-缓存带来的问题)
+- [2 Redis基础概念](#2-Redis基础概念)
+  - [2.1 Redis与Memcached区别](#21-Redis与Memcached区别)
+  - [2.2 Redis数据结构](#22-Redis数据结构)
+  - [2.3 Redis线程模型](#23-Redis线程模型)
+
 # Redis总结
 
 ## 1 缓存
@@ -32,6 +40,12 @@
 **1. 基础数据结构**
 
 - String
+- hash
+- list
+- set
+- sorted set
+
+1）String
 
 最简单的KV存储（效率比Memcached高）
 
@@ -41,7 +55,7 @@
 set name JeasonBourne
 ````
 
-- hash
+2）hash
 
 类似map的数据结构
 
@@ -62,11 +76,11 @@ person = {
 }
 ````
 
-- list
+3）list
 
 有序列表
 
-> 可通过list存储列表型的数据结构，如存储粉丝列表、文章评论列表等
+> 可利用list存储列表型的数据结构，实现如存储粉丝列表、文章评论列表等
 
 > 可通过lrange命令实现高性能分页，如微博下拉刷新的分页操作
 
@@ -75,8 +89,59 @@ person = {
 lrange pageList 0 -1
 ````
 
-- set
-- sorted set
+> 可利用list存储的顺序结构，实现如简易版消息队列
+
+````
+lpush mqDemo 1
+lpush mqDemo 2
+
+rpop mqDemo
+````
+
+4）set
+
+无序集合，自动去重
+
+> 可利用set的交集、并集和差集操作，实现如两个好友间的共同好友、可能认识的人等
+
+````shell
+# 操作单个set
+# 添加元素
+sadd hisSet 1
+
+# 查看全部元素
+smembers hisSet
+
+# 判断是否包含某个元素
+sismember hisSet 1
+
+# 删除某个/多个元素
+srem hisSet 1
+srem hisSet 2 4
+
+# 查看元素个数
+scard hisSet
+
+# 随机删除一个元素
+spop hisSet
+````
+
+````shell
+# 操作多个set
+# 将一个set的元素移动到另外一个set
+smove yourSet hisSet 2
+
+# 求两set的交集
+sinter yourSet hisSet
+
+# 求两set的并集
+sunion yourSet hisSet
+
+# 求在yourSet中而不在mySet中的元素
+sdiff yourSet hisSet
+````
+
+5）sorted set
 
 **2. 高级数据结构**
 
