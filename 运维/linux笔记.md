@@ -34,6 +34,7 @@
     - [4.1.1 Jenkins启动报错](#411-Jenkins启动报错)
     - [4.1.2登陆后页面空白](#412-登陆后页面空白)
   - [4.2 Docker无法搜索和拉取镜像](#42-Docker无法搜索和拉取镜像)
+  - [4.3 jsp等命令无效](43-jsp等命令无效)
 - [5 高级命令](#5-高级命令)
   - [5.1 运行jar包](#51-运行jar包)
   - [5.2 打开文件](#52-打开文件)
@@ -901,7 +902,13 @@ vim /etc/docker/daemon.json
 systemctl restart docker
 ````
 
+### 4.3 jsp等命令无效
 
+根据自己安装的jdk版本补充安装对应的工具包（如jdk1.8）
+
+````
+yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+````
 
 ## 5 高级命令
 
