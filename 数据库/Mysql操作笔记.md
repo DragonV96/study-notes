@@ -1,8 +1,29 @@
-# 日志
+# MySQL操作笔记
 
-## 1 binlog二进制日志
+## 1 查询
 
-### 1.1 开启binlog日志
+### 1.1 MySQL环境变量查询
+
+````sql
+-- 1表示每次事务的redo log都直接持久化到磁盘，保证MySQL异常重启之后数据不丢失
+show variables like 'innodb_flush_log_at_trx_commit'
+
+-- 1表示每次事务的binlog都持久化到磁盘，保证MySQL异常重启之后binlog不丢失
+show variables like 'sync_binlog'
+````
+
+### 1.2 事务相关查询操作
+
+````sql
+-- 查询长事务（查找持续时间超过60s的事务）
+select * from information_schema.innodb_trx where TIME_TO_SEC(timediff(now(),trx_started))>60
+````
+
+## 2 日志
+
+### 2.1 binlog二进制日志
+
+#### 2.1.1 开启binlog日志
 
 1. 在 /etc/my.cnf 中的[mysqld]下增加如下配置
 
@@ -24,7 +45,7 @@ systemctl restart mysqld
 docker restart mysql
 ````
 
-### 1.2 查看binlog信息
+#### 2.1.2 查看binlog信息
 
 - 查看binlog开关
 
@@ -60,9 +81,7 @@ show binlog events in 'binlog.000030' from 922 limit 2;
 show binlog events in 'binlog.000030' from 922 limit 1,2;
 ````
 
-
-
-### 1.3 管理binlog
+#### 1.1.3 管理binlog
 
 - 查看所有binlog的日志列表
 
