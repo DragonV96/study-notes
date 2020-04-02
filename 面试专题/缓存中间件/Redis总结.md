@@ -13,10 +13,16 @@
   - [4.1 RDB](#41-RDB)
   - [4.2 AOF](#42-AOF)
   - [4.3 RDB与AOF对比](#43-RDB与AOF对比)
-- [5 Redis的高并发和高可用](#5-Redis的高并发和高可用)
-  - [5.1 Redis主从架构](#51-Redis主从架构)
-  - [5.2 Redis哨兵机制](#52-Redis哨兵机制)
-- [6 常见的Redis场景](#6-常见的Redis场景)
+- [5 Redis主从架构](#5-Redis主从架构)
+  - [5.1 redis replication的核心机制](#51-redis replication的核心机制)
+  - [5.2 主从复制的核心原理](#52-主从复制的核心原理)
+    - [5.2.1 复制流程概述](#521-复制流程概述)
+    - [5.2.2 主从复制的断点续传](#522-主从复制的断点续传)
+    - [5.2.3 无磁盘化复制](#523-无磁盘化复制)
+    - [5.2.4 过期key处理](#524-过期key处理)
+  - [5.3 复制的完整流程](#53-复制的完整流程)
+- [6 Redis哨兵机制](#6-Redis哨兵机制)
+- [7 常见的Redis场景](#7-常见的Redis场景)
 
 # Redis总结
 
@@ -340,11 +346,9 @@ AOF 机制是对每条写入命令作为日志，以 `append-only` 的模式写�
 | 恢复完整性  |     丢失数据较多（5min）     |       丢失数据极少（1s）       |
 |  适用场景   |             冷备             |            紧急容灾            |
 
-## 5 Redis的高并发和高可用
+## 5 Redis主从架构
 
-### 5.1 Redis主从架构
-
-**1. 概念**
+**概念**
 
 主从架构(master-slave)，一主多从，主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。
 
@@ -352,6 +356,58 @@ AOF 机制是对每条写入命令作为日志，以 `append-only` 的模式写�
 
 ![1585238092132](assets/1585238092132.png)
 
-### 5.2 Redis哨兵机制
+### 5.1 redis replication的核心机制
 
-## 6 常见的Redis场景问题
+- 采用异步方式复制数据到slave节点（Redis 2.8开始 slave node 会周期性地确认自身每次复制的数据量）
+- 一个 master node 可配置多个 slave node
+- slave node 之间可互通
+- slave node复制时不会阻塞 master node 的正常读写
+- slave node 复制时不会阻塞自身的读操作（因为旧的数据集提供读服务，复制完成时会删除旧数据集然后加载新数据集，但此时会短暂暂停对外服务）
+- slave node 主要用来横向扩容，做读写分离，提高读的吞吐量
+
+※注意：主从架构中必须开启 master node 的持久化，master 的各种备份方案也需要同时开启。
+
+> 不建议用 slave node 作为 master node 的数据热备，因为若关掉 master 的持久化，可能在 master 宕机重启的时候数据是空的，一经复制， slave node 的数据也随之丢失。
+
+### 5.2 主从复制的核心原理
+
+#### 5.2.1 复制流程概述
+
+当启动一个 slave node 的时候，它会发送一个 `PSYNC` 命令给 master node。
+
+如果这是 slave node 初次连接到 master node，那么会触发一次 `full resynchronization` 全量复制。此时 master 会启动一个后台线程，开始生成一份 `RDB` 快照文件，同时还会将从客户端 client 新收到的所有写命令缓存在内存中。`RDB` 文件生成完毕后， master 会将这个 `RDB` 发送给 slave，slave 会先**写入本地磁盘，然后再从本地磁盘加载到内存**中，接着 master 会将内存中缓存的写命令发送到 slave，slave 也会同步这些数据。slave node 如果跟 master node 有网络故障，断开了连接，会自动重连，连接之后 master node 仅同步给 slave 部分缺少的数据。
+
+![1585821124926](assets/1585821124926.png)
+
+#### 5.2.2 主从复制的断点续传
+
+redis2.8 开始支持主从复制的断点续传，如果主从复制过程中，网络连接断开，那么可以接着上次复制的地方，继续复制下去，而不是从头开始复制一份。
+
+master node 会在内存中维护一个 backlog，master 和 slave 都会保存一个 replica offset 还有一个 master run id，offset 就是保存在 backlog 中的。若 master 和 slave 网络连接断开，slave 会让 master 从上次 replica offset 开始继续复制，如果没有找到对应的 offset，那么就会执行一次 `resynchronization`。
+
+> 根据 host+ip 定位 master node 是不靠谱的，如果 master node 重启或者数据出现了变化，那么 slave node 应根据不同的 run id 区分。
+
+#### 5.2.3 无磁盘化复制
+
+master 在内存中直接创建 `RDB` 后发送给 slave，不在自己本地写入磁盘。
+
+> 只需要在配置文件中开启 `repl-diskless-sync yes` 即可。
+
+````
+repl-diskless-sync yes
+
+# 等待 5s 后再开始复制，因为要等更多 slave 重新连接过来
+repl-diskless-sync-delay 5
+````
+
+#### 5.2.4 过期key处理
+
+slave 不会过期 key，只会等待 master 过期 key。
+
+> 如果 master 过期了一个 key，或者通过 LRU 淘汰了一个 key，那么会模拟一条 del 命令发送给 slave。
+
+### 5.3 复制的完整流程
+
+## 6 Redis哨兵机制
+
+## 7 常见的Redis场景问题
