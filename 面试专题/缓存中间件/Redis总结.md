@@ -21,6 +21,11 @@
     - [5.2.3 无磁盘化复制](#523-无磁盘化复制)
     - [5.2.4 过期key处理](#524-过期key处理)
   - [5.3 复制的完整流程](#53-复制的完整流程)
+    - [5.3.1 全量复制](#531-全量复制)
+    - [5.3.2 增量复制](#532-增量复制)
+    - [5.3.3 心跳](#533-心跳)
+    - [5.3.4 异步复制](#534-异步复制)
+  - [5.4 Redis如何做到高可用](#54-Redis如何做到高可用)
 - [6 Redis哨兵机制](#6-Redis哨兵机制)
 - [7 常见的Redis场景](#7-常见的Redis场景)
 
@@ -407,6 +412,56 @@ slave 不会过期 key，只会等待 master 过期 key。
 > 如果 master 过期了一个 key，或者通过 LRU 淘汰了一个 key，那么会模拟一条 del 命令发送给 slave。
 
 ### 5.3 复制的完整流程
+
+slave node 启动时，会保存 master node 的信息到本地，包括 master node 的`host`和`ip`。
+
+slave node 内部有个定时任务，每秒检查是否有新的 master node 要连接和复制，如果发现，就跟 master node 建立 socket 网络连接。然后 slave node 发送 `ping` 命令给 master node。如果 master 设置了 requirepass，那么 slave node 必须发送 masterauth 的口令过去进行认证。master node **第一次执行全量复制**，将所有数据发给 slave node。然后 master node 将持续发送写命令，异步复制给 slave node。
+
+![1585839699583](assets/1585839699583.png)
+
+#### 5.3.1 全量复制
+
+- master 执行 `bgsave` ，在本地生成一份 rdb 快照文件
+
+- master node 将 rdb 快照文件发送给 slave node，如果 rdb 复制时间超过 60秒（repl-timeout），那么 slave node 就会认为复制失败
+
+  > 可以适当调大这个参数(对于千兆网卡的机器，一般每秒传输 100MB，6G 文件，很可能超过 60s)
+
+- master node 在生成 rdb 时，会将所有新的写命令缓存在内存中，在 slave node 保存了 rdb 之后，再将新的写命令复制给 slave node
+
+- 如果在复制期间，内存缓冲区持续消耗超过 64MB，或者一次性超过 256MB，那么停止复制，复制失败
+
+  ```
+  client-output-buffer-limit slave 256MB 64MB 60
+  ```
+
+- slave node 收到 rdb 后，清空自己的旧数据，然后重新加载 rdb 到自己的内存中，同时**基于旧的数据版本**对外提供服务
+
+- 如果 slave node 开启了 AOF，会立即执行 BGREWRITEAOF，重写 AOF
+
+#### 5.3.2 增量复制
+
+- 如果全量复制过程中，master-slave 网络连接断开，那么 slave 重新连接 master 时，会触发增量复制
+- master 直接从自己的 backlog 中获取部分丢失的数据，发送给 slave node（默认 backlog 就是 1MB）
+- master 就是根据 slave 发送的 psync 中的 offset 来从 backlog 中获取数据的
+
+#### 5.3.3 心跳
+
+主从节点互相都会发送 heartbeat 信息。
+
+> master 默认每隔 10秒 发送一次 heartbeat，slave node 每隔 1秒 发送一个 heartbeat
+
+#### 5.3.4 异步复制
+
+master 每次接收到写命令之后，先在内部写入数据，然后异步发送给 slave node。
+
+### 5.4 Redis如何做到高可用
+
+redis 的高可用架构，叫做 `failover` **故障转移**，又叫做主备切换。
+
+> 如果系统在 365 天内，有 99.99% 的时间，都是可以对外提供服务的，那么就说系统是高可用的。
+
+主备切换指 master node 在故障时，自动检测，并且将某个 slave node 自动切换为 master node 的过程。这个过程实现了 redis 的主从架构下的高可用。
 
 ## 6 Redis哨兵机制
 
