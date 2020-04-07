@@ -1,12 +1,13 @@
-<h1 style="font-weight:bold;"><center>docker-compose.yml文件详解</center></h1>
+# docker-compose.yml文件详解
+
+## Compose和Docker兼容性
+​    Compose 文件格式有3个版本,分别为1, 2.x 和 3.x
+​    目前主流的为 3.x 其支持 docker 1.13.0 及其以上的版本
+
+## 常用参数
 
 
 ```yml
-Compose和Docker兼容性：
-    Compose 文件格式有3个版本,分别为1, 2.x 和 3.x
-    目前主流的为 3.x 其支持 docker 1.13.0 及其以上的版本
-
-常用参数：
     version           # 指定 compose 文件的版本
     services          # 定义所有的 service 信息, services 下面的第一级别的 key 既是一个 service 的名称
 
@@ -272,7 +273,10 @@ Compose和Docker兼容性：
                 subnet                # CIDR格式的子网，表示该网络的网段
         external              # 外部网络, 如果设置为 true 则 docker-compose up 不会尝试创建它, 如果它不存在则引发错误
         name                  # v3.5 以上版本, 为此网络设置名称
-文件格式示例：
+```
+## 文件格式示例
+
+```yaml
     version: "3"
     services:
       redis:

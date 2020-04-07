@@ -1,6 +1,19 @@
-<h1 style="font-weight:bold;"><center>SpringBoot学习笔记</center></h1>
+# Spring Boot实战笔记
 
-# 第一章 Spring基础
+## 1 Spring Boot入门
+
+### 1.1 Spring Boot核心
+
+- 自动配置：Spring Boot 自动提供 Spring 应用程序的JPA、Thymeleaf模板、安全和Spring MVC等相关配置
+- 起步依赖：特殊的 Maven 依赖和 Gradle 依赖，利用传递依赖解析，把常用库聚合在一起，组成几个为特定功能而定制的依赖
+- 命令行界面（Spring Boot CLI）：无需传统项目构建，只需专注于应用代码就能完成完整的应用程序
+- Actuator：提供在运行时检视应用程序内部情况的特性
+
+
+
+
+
+## 第一章 Spring基础
 
 ## 1.1 Spring概述
 
@@ -209,11 +222,11 @@ mvn install:install-file -DgroupId=com.oracle "-DartifactId=ojdbc14" "-Dversion=
 
 ​	@Autowired、@Inject、@Resource可注解在set方法上或者属性上，注解在属性上可使代码更少、层次更清晰。
 
-​		**Spring IOC原理拆解图**
+**Spring IOC原理拆解图**
 
 ![1583046882582](assets/1583046882582.png)
 
-​		**Spring MVC原理拆解图**
+**Spring MVC原理拆解图**
 
 ![1583047634233](assets/1583047634233.png)
 

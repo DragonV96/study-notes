@@ -1,6 +1,6 @@
-<h1 style="font-weight:bold;"><center>MYSQL学习笔记</center></h1>
+# MySQL学习笔记
 
-# 第一章 sql
+## 第一章 sql
 
 **SQL语句分类：**
 
@@ -14,7 +14,7 @@
 
 ![1573726522208](assets/1573726522208.png)
 
-## 1.1 DML语法
+### 1.1 DML语法
 
 ```sql
 选择：select * from table1 where 范围
@@ -30,7 +30,7 @@
 最小：select min(field1) as minvalue from table1
 ```
 
-## 1.2 DDL语法
+### 1.2 DDL语法
 
 ````sql
 1、创建数据库
@@ -71,11 +71,9 @@ Alter table tabname add column col type
 删除视图：drop view viewname
 ````
 
+## 第二章 sql优化
 
-
-# 第二章 sql优化
-
-## 2.1 插入优化
+### 2.1 插入优化
 
 **1. 一条SQL语句插入多条数据。**
 
@@ -99,8 +97,8 @@ VALUES('0','userid_0','content_0',0),('1','userid_1','content_1',1);
 
 ![1573726930618](assets/1573726930618.png)
 
-## 2.2 删除优化
+### 2.2 删除优化
 
-## 2.3 修改优化
+### 2.3 修改优化
 
-## 2.4 查询优化
+### 2.4 查询优化

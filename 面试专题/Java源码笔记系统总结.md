@@ -677,7 +677,7 @@ private void grow(int minCapacity) {
 
 ## 2.2 LinkedList 源码解析
 
-## 2.3 List 源码会问哪些面试题
+## 2.3 List 源码面试题
 
 ## 2.4 HashMap 源码解析
 

@@ -1,24 +1,24 @@
-<h1 style="font-weight:bold;"><center>Docker学习笔记</center></h1>
+# Docker命令笔记
 
-# 第一章 基本命令
+## 1 基本命令
 
-## 1.1 Docker命令
+### 1.1 Docker命令
 
-### 1.1.1 查看容器相关命令
+#### 1.1.1 查看容器相关命令
 
-​		1.查看docker正在运行的容器情况
+​	1.查看docker正在运行的容器情况
 
 ````
 docker ps
 ````
 
-​		2.查看docker中已安装的镜像情况
+​	2.查看docker中已安装的镜像情况
 
 ```
 docker images
 ```
 
-​		3.查看docker指定容器日志
+​	3.查看docker指定容器日志
 
 ```
 docker logs -f [容器名]
@@ -29,7 +29,7 @@ docker logs -f mysql
 docker logs -ft --tail 300 mysql
 ```
 
-​		4.查看容器启动命令
+​	4.查看容器启动命令
 
 - 在容器外部
 
@@ -46,9 +46,9 @@ docker inspect mysql
 ps -fe
 ````
 
-### 1.1.2 容器操作相关命令
+#### 1.1.2 容器操作相关命令
 
-​		1.在容器里开启一个mysql伪终端交互
+​	1.在容器里开启一个mysql伪终端交互
 
 ```
 docker exec -it [容器名] bash
@@ -57,7 +57,7 @@ docker exec -it [容器名] bash
 docker exec -it mysql bash
 ```
 
-​		2.载入本地docker镜像
+​	2.载入本地docker镜像
 
 ```
 docker load -i [镜像文件完整路径]
@@ -66,7 +66,7 @@ docker load -i [镜像文件完整路径]
 docker load -i /usr/local/comtom/dockerimages/alpine-java.tar
 ```
 
-​		3.保存docker镜像到本地
+​	3.保存docker镜像到本地
 
 ````
 docker save -o [镜像文件完整路径及命名] [当前镜像标签名]
@@ -75,9 +75,9 @@ docker save -o [镜像文件完整路径及命名] [当前镜像标签名]
 docker save -o /usr/local/comtom/dockerimages/rabbitmq.tar registry.comtom.cn:2443/gd-v5/rabbitmq:3.8.0
 ````
 
-### 1.1.3 删除容器及镜像(以mysql为例)
+#### 1.1.3 删除容器及镜像(以mysql为例)
 
-​		1.查看docker正在运行的容器情况
+​	1.查看docker正在运行的容器情况
 
 ````
 docker ps
@@ -85,14 +85,14 @@ docker ps
 
 ![1571121219505](assets/1571121219505.png)
 
-​		2.停止运行容器（容器名字或ID均可）
+​	2.停止运行容器（容器名字或ID均可）
 
 ````
 docker stop 1a8eb1e42729
 docker stop mysql
 ````
 
-​		3.删除容器（容器名字或ID均可）
+​	3.删除容器（容器名字或ID均可）
 
 ````
 docker rm 1a8eb1e42729
@@ -101,7 +101,7 @@ docker rm mysql
 docker rm -f mysql				(强制删除容器)
 ````
 
-​		4.删除镜像（ID或镜像名字均可，名称后需要加上冒号和版本号）
+​	4.删除镜像（ID或镜像名字均可，名称后需要加上冒号和版本号）
 
 ````
 docker rmi 1a8eb1e42729
@@ -110,31 +110,31 @@ docker rmi mysql:latest
 docker rmi -f mysql:latest		(强制删除镜像)
 ````
 
-## 1.2 Docker-compose命令
+### 1.2 Docker-compose命令
 
-### 1.2.1 查看容器相关命令
+#### 1.2.1 查看容器相关命令
 
-​		1.查看docker-compose中正在运行的容器情况
+​	1.查看docker-compose中正在运行的容器情况
 
 ```
 docker-compose ps
 ```
 
-​		2.查看docker-compose中已安装的镜像情况
+​	2.查看docker-compose中已安装的镜像情况
 
 ```
 docker-compose images
 ```
 
-​		3.查看docker-compose日志
+​	3.查看docker-compose日志
 
 ```
 docker-compose logs -f
 ```
 
-### 1.1.2 容器操作相关命令
+#### 1.1.2 容器操作相关命令
 
-​		1.在容器里开启一个mysql伪终端交互
+​	1.在容器里开启一个mysql伪终端交互
 
 ```
 docker-compose exec [容器名] bash
@@ -143,9 +143,9 @@ docker-compose exec [容器名] bash
 docker-compose exec mysql bash
 ```
 
-### 1.1.3 删除容器
+#### 1.1.3 删除容器
 
-​		1.查看docker-compose正在运行的容器情况
+​	1.查看docker-compose正在运行的容器情况
 
 ```
 docker-compose ps
@@ -153,56 +153,56 @@ docker-compose ps
 
 ![1575355859561](assets/1575355859561.png)
 
-​		2.停止运行docker-compose容器
+​	2.停止运行docker-compose容器
 
 ```
 docker-compose stop
 ```
 
-​		3.删除docker-compose容器
+​	3.删除docker-compose容器
 
 ```
 docker-compose rm
 y
 ```
 
-# 第二章 Docker安装镜像及使用
+## 2 Docker安装镜像及使用
 
-​		大前提：当前操作系统上已安装好Docker，可输入下面命令查看docker版本
+​	大前提：当前操作系统上已安装好Docker，可输入下面命令查看docker版本
 
 ````
 docker -v
 ````
 
-## 2.1 安装Docker
+### 2.1 安装Docker
 
-​		Docker 要求 CentOS 系统的内核版本高于 3.10 。
+​	Docker 要求 CentOS 系统的内核版本高于 3.10 。
 
-​		1.查看操作系统当前的内核版本
+​	1.查看操作系统当前的内核版本
 
 ```
 uname -r
 ```
 
-​		2.更新yum包到最新
+​	2.更新yum包到最新
 
 ```
 yum update
 ```
 
-​		3.卸载旧版本（如果存在旧版本，不存在则跳过）
+​	3.卸载旧版本（如果存在旧版本，不存在则跳过）
 
 ```
 yum remove docker docker-common docker-selinux docker-engine -y
 ```
 
-​		4.安装docker需要的软件，yum-util提供yum-config-manager功能，其他两个是devicemapper驱动依赖的包
+​	4.安装docker需要的软件，yum-util提供yum-config-manager功能，其他两个是devicemapper驱动依赖的包
 
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
 ```
 
-​		5.配置yum源
+​	5.配置yum源
 
 ```
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo			（阿里云）
@@ -212,87 +212,87 @@ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/d
 yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo				（中国科技大学）
 ```
 
-​		6.查看所有仓库中所有docker版本，并选择特定版本进行安装
+​	6.查看所有仓库中所有docker版本，并选择特定版本进行安装
 
 ```
 yum list docker-ce --showduplicates | sort -r
 ```
 
-​		7.安装docker
+​	7.安装docker
 
 ```
 yum -y install docker-ce			(默认装最新稳定版)
 ```
 
-​		8.启动docker服务
+​	8.启动docker服务
 
 ```
 systemctl start docker		(启动)
 systemctl stop docker		(关闭,安装过程不要执行)
 ```
 
-​		9.开机启动docker服务
+​	9.开机启动docker服务
 
 ```
 systemctl enable docker		(启动)
 systemctl disable docker	(关闭,安装过程不要执行)
 ```
 
-​		10.查看docker版本（有client和server表示docker安装成功）
+​	10.查看docker版本（有client和server表示docker安装成功）
 
 ```
 docker version
 ```
 
-## 2.2 安装Docker-compose
+### 2.2 安装Docker-compose
 
-​		Docker-compose 要求docker的内核版本高于所对应的docker最低版本 。
+​	Docker-compose 要求docker的内核版本高于所对应的docker最低版本 。
 
-​		1.查看当前docker的内核版本
+​	1.查看当前docker的内核版本
 
 ```
 docker version
 ```
 
-​		2.进入docker-compose的github官方release页面：[点我跳转](https://github.com/docker/compose/releases)
+​	2.进入docker-compose的github官方release页面：[点我跳转](https://github.com/docker/compose/releases)
 
-​		3.下载[docker-compose-Linux-x86_64](https://github.com/docker/compose/releases/download/1.25.0/docker-compose-Linux-x86_64)
+​	3.下载[docker-compose-Linux-x86_64](https://github.com/docker/compose/releases/download/1.25.0/docker-compose-Linux-x86_64)
 
-​		4.上传到 `/usr/local/bin` 目录下，然后重命名为 `docker-compose`
+​	4.上传到 `/usr/local/bin` 目录下，然后重命名为 `docker-compose`
 
 ```
 mv docker-compose-Linux-x86_64 docker-compose
 ```
 
-​		5.赋予 `docker-compose` 文件root权限
+​	5.赋予 `docker-compose` 文件root权限
 
 ```
 chmod +x /usr/local/bin/docker-compose
 ```
 
-​		6.查看 `docker-compose` 版本
+​	6.查看 `docker-compose` 版本
 
 ```
 docker-compose version
 ```
 
-## 2.3 安装数据库
+### 2.3 安装数据库
 
-### 2.3.1 MySQL
+#### 2.3.1 MySQL
 
-​		1.在docker仓库中搜索mysql的镜像
+​	1.在docker仓库中搜索mysql的镜像
 
 ```
 docker search mysql
 ```
 
-​		2.下载mysql镜像
+​	2.下载mysql镜像
 
 ```
 docker pull mysql
 ```
 
-​		3.运行mysql容器（运行完显示一串sha256字符）
+​	3.运行mysql容器（运行完显示一串sha256字符）
 
 ```shell
 docker run --name mysql -p 3306:3306 --restart=always -v /usr/local/mysql/conf:/etc/mysql/conf.d -v /usr/local/mysql/data:/var/lib/mysql -v /usr/local/mysql/log:/logs -e MYSQL_ROOT_PASSWORD=root --privileged=true -d registry.comtom.cn:2443/gd-v5/mysql:5.7.26 --lower_case_table_names=1
@@ -307,13 +307,13 @@ docker run --name mysql -p 3306:3306 --restart=always -v /usr/local/mysql/conf:/
 - **-e MYSQL_ROOT_PASSWORD=root**：初始化 root 用户的密码为root。
 - **--lower_case_table_names=1**：设置数据库表名为小写。
 
-​		4.进入mysql容器
+​	4.进入mysql容器
 
 ````shell
 docker exec -it mysql bash
 ````
 
-​		5.执行sql脚本
+​	5.执行sql脚本
 
 ````shell
 执行宿主机目录的指定sql脚本
@@ -322,29 +322,29 @@ docker exec -i mysql sh -c "exec mysql -uroot -proot" < /usr/local/mysql/xxx.sql
 docker exec -i mysql sh -c "exec mysql -uroot -proot < /usr/local/mysql/xxx.sql"
 ````
 
-​		6.退出docker中的mysql交互窗口
+​	6.退出docker中的mysql交互窗口
 
 ````shell
 exit
 ````
 
-### 2.3.2 MongoDB
+#### 2.3.2 MongoDB
 
-### 2.3.3 Hbase
+#### 2.3.3 Hbase
 
-​		1.在docker仓库中搜索hbase的镜像
+​	1.在docker仓库中搜索hbase的镜像
 
 ```
 docker search hbase
 ```
 
-​		2.下载hbase镜像
+​	2.下载hbase镜像
 
 ```
 docker pull harisekhon/hbase
 ```
 
-​		3.运行hbase容器（运行完显示一串sha256字符）
+​	3.运行hbase容器（运行完显示一串sha256字符）
 
 ```shell
 docker run --name hbase --net=host -h docker-hbase -d harisekhon/hbase
@@ -357,13 +357,13 @@ docker run --name hbase --net=host -h docker-hbase -d harisekhon/hbase
 - **-h docker-hbase**：设置容器的host为docker-hbase。
 - **-d**：后台运行。
 
-​		4.进入mysql容器
+​	4.进入mysql容器
 
 ```shell
 docker exec -it hbase bash
 ```
 
-​		5.设置host
+​	5.设置host
 
 ```shell
 进入并编辑hosts文件
@@ -376,34 +376,34 @@ vi /etc/hosts
 :wq
 ```
 
-​		6.进入hbase控制台
+​	6.进入hbase控制台
 
 ```shell
 hbase shell
 ```
 
-​		7.退出docker中的mysql交互窗口
+​	7.退出docker中的mysql交互窗口
 
 ```shell
 exit
 ```
 
-## 2.4 安装中间件
+### 2.4 安装中间件
 
-### 2.4.1 RabbitMQ
+#### 2.4.1 RabbitMQ
 
-### 2.4.2 Kafka
+#### 2.4.2 Kafka
 
-​		由于kafka依赖于zookeeper，所以必须先拉取zookeeper的docker镜像。
+​	由于kafka依赖于zookeeper，所以必须先拉取zookeeper的docker镜像。
 
-​		1.下载zookeeper和kafka的镜像
+​	1.下载zookeeper和kafka的镜像
 
 ```
 docker pull wurstmeister/zookeeper
 docker pull wurstmeister/kafka
 ```
 
-​		2.构建docker-compose.yml
+​	2.构建docker-compose.yml
 
 ```yaml
 version: '3'
@@ -429,25 +429,25 @@ services:
 - **KAFKA_CREATE_TOPICS** 配置kafka默认的topics
 - **KAFKA_ZOOKEEPER_CONNECT** 配置zookeeper的地址和端口
 
-​		3.在docker-compose.yml文件所在目录进行服务打包
+​	3.在docker-compose.yml文件所在目录进行服务打包
 
 ```shell
 docker-compose build
 ```
 
-​		4.启动服务
+​	4.启动服务
 
 ```shell
 docker-compose up -d
 ```
 
-​		5.进入kafka伪终端
+​	5.进入kafka伪终端
 
 ````shell
 docker exec -it kafka_kafka_1 bash
 ````
 
-​		6.修改kafka配置**（否则外网无法访问）**
+​	6.修改kafka配置**（否则外网无法访问）**
 
 ````shell
 cd /opt/kafka_2.12-2.3.0/config/
@@ -460,52 +460,52 @@ vi  server.properties
 advertised.listeners=PLAINTEXT://ip:9092
 ````
 
-### 2.4.3 RocketMQ
+#### 2.4.3 RocketMQ
 
-### 2.4.4 activeMQ
+#### 2.4.4 activeMQ
 
-## 2.5 安装自动化工具
+### 2.5 安装自动化工具
 
-### 2.5.1 Git
+#### 2.5.1 Git
 
-​		1.查看是否安装过git
+​	1.查看是否安装过git
 
 ````
 rpm -qa|grep git
 ````
 
-​		显示有以`git-`+版本号的字符，表示已经装过git
+​	显示有以`git-`+版本号的字符，表示已经装过git
 
-​		2.若已经安装，需要先卸载（两条命令任选其一即可）
+​	2.若已经安装，需要先卸载（两条命令任选其一即可）
 
 ````
 rpm -e --nodeps git
 rpm -e git
 ````
 
-​		3.
+​	3.
 
-### 2.5.2 安装Jenkins
+#### 2.5.2 安装Jenkins
 
-​		1.下载Jenkins库
+​	1.下载Jenkins库
 
 ```
 wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 ```
 
-​		2.导入key
+​	2.导入key
 
 ```
 rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
 ```
 
-​		3.安装Jenkins
+​	3.安装Jenkins
 
 ```
 yum install -y jenkins
 ```
 
-​		4.启动/停止/查看Jenkins服务（执行启动即可）
+​	4.启动/停止/查看Jenkins服务（执行启动即可）
 
 ```
 systemctl start jenkins				(启动activemq服务)
@@ -513,7 +513,7 @@ systemctl status jenkins				(查看activemq服务状态)
 systemctl stop jenkins				(停止activemq服务)
 ```
 
-​		5.因为Jenkins默认端口是8080，可能会导致端口冲突，修改Jenkins的默认端口即可
+​	5.因为Jenkins默认端口是8080，可能会导致端口冲突，修改Jenkins的默认端口即可
 
 ```
 vim /etc/sysconfig/jenkins
@@ -528,16 +528,16 @@ JENKINS_PORT=8888
 :wq			（保存更改并退出）
 ```
 
-​		6.配置防火墙开放Jenkins端口
+​	6.配置防火墙开放Jenkins端口
 
 ```
 firewall-cmd --zone=public --add-port=8888/tcp --permanent		(开放8888端口)
 firewall-cmd --reload											(重启防火墙)
 ```
 
-​		7.打开浏览器访问`http://虚拟机IP地址:8888`(192.168.241.129:8888)
+​	7.打开浏览器访问`http://虚拟机IP地址:8888`(192.168.241.129:8888)
 
-​		8.在服务器上查看当前的初始化密码
+​	8.在服务器上查看当前的初始化密码
 
 ```
 cat /var/lib/jenkins/secrets/initialAdminPassword
@@ -545,28 +545,28 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 
 
 
-## 2.6 安装Redis
+### 2.6 安装Redis
 
-## 2.8 安装erlang
+### 2.8 安装erlang
 
-​		1.安装前置依赖
+​	1.安装前置依赖
 
 ````
 yum install ncurses-devel
 ````
 
-​		2.解压
+​	2.解压
 
 ````
 tar -zxvf otp_src_20.1.tar.gz
 ````
 
-​		3.进入解压后的erlang目录，然后执行下面命令（不安装javac）
+​	3.进入解压后的erlang目录，然后执行下面命令（不安装javac）
 
 ````
 ./configure --prefix=/usr/local/erlang20 --without-javac
 ````
-​		4.在当前目录直接执行编译，然后再执行下面的安装命令
+​	4.在当前目录直接执行编译，然后再执行下面的安装命令
 
 ````
 make				（编译）
@@ -575,13 +575,13 @@ make install		（安装）
 make -j 4	(四核cpu编译可采取这个方法，效率更高)
 ````
 
-​		5.运行erlang，执行erlang安装路径中bin路径下的erl文件即可
+​	5.运行erlang，执行erlang安装路径中bin路径下的erl文件即可
 
 ````
 ./bin/erl
 ````
 
-​		6.进入系统文件（/etc/profile），添加环境变量，并重新加载此文件
+​	6.进入系统文件（/etc/profile），添加环境变量，并重新加载此文件
 
 ````
 vim /etc/profile
@@ -592,50 +592,50 @@ export PATH=$PATH:/usr/local/erlang20/bin
 source /etc/profile		（使profile文件修改生效）
 ````
 
-## 2.9 安装RabbitMQ
+### 2.9 安装RabbitMQ
 
-​		**请装好erlang后再执行下述步骤**
+​	**请装好erlang后再执行下述步骤**
 
-​		1.安装python：
+​	1.安装python：
 
 ````
 yum install python -y
 ````
 
-​		2.安装simplejson（-y是后续询问步骤直接yes）
+​	2.安装simplejson（-y是后续询问步骤直接yes）
 
 ````
 yum install xmlto -y
 yum install python-simplejson -y
 ````
 
-​		进行步骤3之前，要求移动到统一自定义文件夹`/usr/local/rabbitmq`下
+​	进行步骤3之前，要求移动到统一自定义文件夹`/usr/local/rabbitmq`下
 
 ```
 mv rabbitmq_server-3.6.14 /usr/local/rabbitmq
 ```
 
-​		3.先解压xz，再解压tar
+​	3.先解压xz，再解压tar
 
 ````
 xz -d rabbitmq-server-generic-unix-3.6.14.tar.xz
 tar xf rabbitmq-server-generic-unix-3.6.14.tar
 ````
 
-​		4.进入rabbitmq路径下sbin目录启动rabbitMQ server
+​	4.进入rabbitmq路径下sbin目录启动rabbitMQ server
 
 ````
 ./rabbitmq-server
 ./rabbitmq-server stop		(关闭rabbitMQ服务)
 ````
 
-​		5.查看rabbitMQ server服务（默认5672端口）
+​	5.查看rabbitMQ server服务（默认5672端口）
 
 ````
 netstat -nap|grep 5672
 ````
 
-​		6.进入系统文件，添加环境变量，并重新加载此文件
+​	6.进入系统文件，添加环境变量，并重新加载此文件
 
 ```
 vim /etc/profile
@@ -647,24 +647,24 @@ export PATH=$PATH:/usr/local/rabbitmq/sbin
 source /etc/profile		（使profile文件修改生效）
 ```
 
-## 2.10 安装ActiveMQ
+### 2.10 安装ActiveMQ
 
-​		1.在/usr/local目录下创建activemq文件夹（为了运维规范化，建议建立在/usr/local下）
+​	1.在/usr/local目录下创建activemq文件夹（为了运维规范化，建议建立在/usr/local下）
 
 ```
 mkdir /usr/local/activemq
 cd /usr/local/activemq
 ```
 
-​		2.将下载好的ActiveMQ通过xftp（或其他ftp工具）传到linux上的`/usr/local/activemq/`文件夹下, 下载地址：http://activemq.apache.org/activemq-5155-release.html
+​	2.将下载好的ActiveMQ通过xftp（或其他ftp工具）传到linux上的`/usr/local/activemq/`文件夹下, 下载地址：http://activemq.apache.org/activemq-5155-release.html
 
-​		3.解压tar包到当前文件夹（activemq）下
+​	3.解压tar包到当前文件夹（activemq）下
 
 ```
 tar -zxvf apache-activemq-5.15.5-bin.tar.gz
 ```
 
-​		4.启动/停止/查看ActiveMQ服务，首先需要进入`apache-activemq-5.15.5`目录（当前操作可跳过）
+​	4.启动/停止/查看ActiveMQ服务，首先需要进入`apache-activemq-5.15.5`目录（当前操作可跳过）
 
 ```
 cd /usr/local/activemq/apache-activemq-5.15.5	（进入目录）
@@ -674,7 +674,7 @@ bin/activemq status				(查看activemq服务状态)
 bin/activemq stop				(停止activemq服务)
 ```
 
-​		5.为了在任意地方通过`service activemq start `就可以启动activemq，配置`JAVA_HOME`地址，然后建立软连接
+​	5.为了在任意地方通过`service activemq start `就可以启动activemq，配置`JAVA_HOME`地址，然后建立软连接
 
 ```
 vim /usr/local/activemq/apache-activemq-5.15.5/bin/activemq
@@ -686,7 +686,7 @@ export JAVA_HOME="/usr/local/java/jdk1.8.0_211"
 ln -s /usr/local/activemq/apache-activemq-5.15.5/bin/activemq /etc/init.d	(建立软连接)
 ```
 
-​		6.配置开机启动，可通过系统指令在任意位置进行启动/停止/查看activemq服务
+​	6.配置开机启动，可通过系统指令在任意位置进行启动/停止/查看activemq服务
 
 ````
 chkconfig activemq on				(设置开机启动)
@@ -696,18 +696,18 @@ service activemq status				(查看activemq服务状态)
 service activemq stop				(停止activemq服务)
 ````
 
-​		7.配置防火墙开放ActiveMQ端口
+​	7.配置防火墙开放ActiveMQ端口
 
 ````
 firewall-cmd --zone=public --add-port=8161/tcp --permanent		(开放8161端口)
 firewall-cmd --reload											(重启防火墙)
 ````
 
-​		8.打开浏览器访问`http://虚拟机IP地址:8161`，账号密码均为`admin`
+​	8.打开浏览器访问`http://虚拟机IP地址:8161`，账号密码均为`admin`
 
-## 2.13 安装fastDFS
+### 2.13 安装fastDFS
 
-​		查看是否安装成功
+​	查看是否安装成功
 
 ```
 查看storage日志：
@@ -725,11 +725,11 @@ fdfs_test /etc/fdfs/client.conf upload index.html
 浏览器输入example file url访问
 ```
 
-# 第三章 Docker镜像操作
+## 3 Docker镜像操作
 
-## 3.1 打包镜像至私有仓库
+### 3.1 打包镜像至私有仓库
 
-​		1.登陆私有仓库，输入账号密码即可
+​	1.登陆私有仓库，输入账号密码即可
 
 ````
 docker login [地址]
@@ -738,7 +738,7 @@ docker login [地址]
 docker login registry.comtom.cn:2443/gd-v5
 ````
 
-​		2.构建镜像（需要提前写好Dockerfile，且需要进入到Dockerfile所在目录下执行）
+​	2.构建镜像（需要提前写好Dockerfile，且需要进入到Dockerfile所在目录下执行）
 
 ```
 docker build -t [镜像名]:[镜像版本号] .
@@ -747,7 +747,7 @@ docker build -t [镜像名]:[镜像版本号] .
 docker build -t rabbitmq:management .
 ```
 
-​		3.标记镜像
+​	3.标记镜像
 
 ````
 docker tag [原镜像名] [私有仓库镜像名]
@@ -756,7 +756,7 @@ docker tag [原镜像名] [私有仓库镜像名]
 docker tag rabbitmq:management registry.comtom.cn:2443/gd-v5/rabbitmq:1.0
 ````
 
-​		4.推送镜像
+​	4.推送镜像
 
 ````
 docker push [私有仓库镜像名]
@@ -765,7 +765,7 @@ docker push [私有仓库镜像名]
 docker push registry.comtom.cn:2443/gd-v5/rabbitmq:1.0
 ````
 
-​		5.拉取镜像
+​	5.拉取镜像
 
 ````
 docker pull [私有仓库镜像名]

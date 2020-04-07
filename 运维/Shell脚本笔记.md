@@ -1,8 +1,8 @@
-<h1 style="font-weight:bold;"><center>Shell学习笔记</center></h1>
+# Shell脚本笔记
 
-# 第一章 常用脚本
+## 1 常用脚本
 
-## 1.1 shell函数
+### 1.1 shell函数
 
 1，调用无入参函数
 
@@ -68,7 +68,7 @@ get_value http://127.0.0.1/get $(get_request)
 
 - 方法返回值作为入参需要用 `$()` 包裹
 
-## 1.2 http调用脚本
+### 1.2 http调用脚本
 
 1，POST方式调用http接口，并保存返回结果到文件中
 

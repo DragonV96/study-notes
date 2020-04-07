@@ -2,8 +2,6 @@
 
 # Spring实战笔记
 
-- 
-
 ## 1 Spring核心
 
 Spring的核心是Spring容器。
