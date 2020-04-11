@@ -2,7 +2,7 @@
 
 ## 1 常用脚本
 
-### 1.1 shell函数
+### 1.1 shell函数调用
 
 1，调用无入参函数
 
@@ -129,4 +129,75 @@ get_value_yml()
 
 get_value_yml http://127.0.0.1:8080/get key1 private
 ````
+
+### 1.3 处理字符串
+
+#### 1.3.1 获取字符串信息
+
+实例：
+
+```shell
+#!/bin/bash
+path='/usr/local/tomcat/logs/catalina.out'
+
+# 获取字符串长度
+echo ${#path}
+```
+
+#### 1.3.2 截取字符串
+
+实例：
+
+````shell
+#!/bin/bash
+path='/usr/local/tomcat/logs/catalina.out'
+
+# 从右向左截取 第一个 / 后的字符串
+echo ${path%/*}
+
+# 从右向左截取 最后一个 / 后的字符串
+echo ${path%%/*}
+
+# 从左向右截取第一个 / 后的字符串
+echo ${path#*/}
+
+# 从左向右截取最后一个 / 后的字符串
+echo ${path##*/}
+
+# 从左边第6个字符串开始，往右截取至最后
+echo ${path:5}
+
+# 从左边第6个字符串开始，往右截取10个字符
+echo ${path:5:10}
+
+# 从右边第5个字符串开始，往右截取至最后
+echo ${path:0-5}
+
+# 从右边第5个字符串开始，往右截取3个字符
+echo ${path:0-5:3}
+
+# 从左边开始截取，0 表示第一个字符串
+# 从右边开始截取，0-1 表示第一个字符串
+````
+
+#### 1.3.3 替换字符串
+
+实例：
+
+```shell
+#!/bin/bash
+path='usr/local/tomcat/logs/catalina.out'
+
+# 把path里的第一个 lo 字符串，替换为 22 字符串
+echo ${path/lo/22}
+
+# 把path里的所有的 lo 字符串，替换为 22 字符串
+echo ${path//lo/22}
+
+# 匹配以 usr 开头的字符串，替换为 22 字符串
+echo ${path/#usr/22}
+
+# 匹配以 out 结尾的字符串，替换为 22 字符串
+echo ${path/%out/22}
+```
 
