@@ -271,7 +271,7 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
      * @param maxSize 缓存大小
      */
     public LRUCache(int maxSize) {
-        super((int) Math.ceil(size / 0.75) + 1, 0.75f, true);
+        super((int) Math.ceil(maxSize / 0.75) + 1, 0.75f, true);
         MAX_SIZE = maxSize;
     }
 
@@ -464,6 +464,8 @@ redis 的高可用架构，叫做 `failover` **故障转移**，又叫做主备�
 主备切换指 master node 在故障时，自动检测，并且将某个 slave node 自动切换为 master node 的过程。这个过程实现了 redis 的主从架构下的高可用。
 
 ## 6 Redis哨兵机制
+
+
 
 ## 7 常见的Redis场景问题
 
