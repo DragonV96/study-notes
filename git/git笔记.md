@@ -1,11 +1,19 @@
-<h1 style="font-weight:bold;"><center>git学习笔记</center></h1>
+# git学习笔记
 
+## 1 基础概念
 
-# 第一章 常用命令
+### 1.1 git的区域
+
+- 工作区：代码的编写及修改
+- 暂存区：`git add` 将本地修改添加至此
+- 本地仓库：`git commit` 将暂存区的代码提交至此
+- 远程仓库：`git push` 将本地仓库的代码提交至此
+
+## 2 常用命令
 
 ![1571121419790](assets/1571121419790.png)
 
-## 1.1 配置本地ssh
+### 1.1 配置本地ssh
 
 （1）设置git的用户名和邮箱（第一次安装git的情况下）
 
@@ -24,9 +32,9 @@ $ ssh-keygen -t rsa -C "xxxxx@xx"
 
 （4）将 `id_rsa.pub` 用记事本打开，复制里面的全部内容粘贴到 git 服务器上的添加 ssh 配置中即可。
 
-## 1.2 git的基本操作流程
+### 1.2 git的基本操作流程
 
-### 1.2.1 克隆远程仓库的代码
+#### 1.2.1 克隆远程仓库的代码
 
 （1）克隆到本地
 
@@ -40,7 +48,7 @@ $ git clone https://xxx.github.com/xxx/xxx.git
 $ git clone https://xxx.github.com/xxx/xxx.git project
 ```
 
-### 1.2.2 本地代码提交流程
+#### 1.2.2 本地代码提交流程
 
 （1）拉取远程仓库最新代码
 
@@ -66,7 +74,7 @@ $ git commit -m "这里是注释"
 $ git push
 ```
 
-## 1.3 tag的使用
+### 1.3 tag的使用
 
 （1）查看tag
 
@@ -125,11 +133,35 @@ $ git push origin v1.0.1
 $ git push origin --tags
 ```
 
-# 第二章 高级操作
+### 1.4 reset的使用
 
-## 2.1 电脑同时配置gitlab、github和gitee
+1）soft
 
-### 2.1.1 生成密钥
+````shell
+# 回退到 git commit 前，处在暂存区
+git reset --soft HEAD
+````
+
+2）mixed
+
+````shell
+# 回退到 git add前 
+git reset --soft HEAD
+````
+
+3）hard
+
+````shell
+# 工作区、暂存区、本地仓库的改变内容全部丢失
+git reset --soft HEAD
+````
+
+
+## 3 高级操作
+
+### 2.1 电脑同时配置gitlab、github和gitee
+
+#### 2.1.1 生成密钥
 
 （1）生成gitee密钥（指定文件名后缀防止覆盖）
 
@@ -151,7 +183,7 @@ ssh-keygen -t rsa -C "xxx@xx.com" -f ~/.ssh/id_rsa_gitlab
 
 （4）在`~/.ssh/`目录（.ssh在用户文件夹下）会分别生成`id_rsa_gitee`和`id_rsa_gitee.pub`私钥和公钥（还有github与gitlab对应私钥和公钥）。将`id_rsa_gitee.pub`中的全部内容复制粘帖到公司gitlab服务器的SSH-key的配置中。
 
-### 2.1.2 添加config配置
+#### 2.1.2 添加config配置
 
 （1）在`~/.ssh/`下添加config配置文件
 
@@ -204,7 +236,7 @@ IdentityFile
 指定本次连接使用的密钥文件
 ````
 
-### 2.1.3 配置git仓库
+#### 2.1.3 配置git仓库
 
 由于公司使用gitlab进行代码管理，所以将gitlab设置为`global`全局配置（可根据自身情况选择设置）。
 
@@ -241,13 +273,13 @@ git config --local user.name 'xxx'
 git config --local user.email 'xxx@xx.com'
 ```
 
-## 2.2 配置项目同时提交到github和gitee
+### 2.2 配置项目同时提交到github和gitee
 
 **前提：已经在gitee上导入github项目。**
 
 ![image-20200123163017591](assets/image-20200123163017591.png)
 
-### 2.2.1 本地只有一个ssh-key的情况
+#### 2.2.1 本地只有一个ssh-key的情况
 
 **方法一：多次推送**
 
@@ -326,5 +358,5 @@ git pull --rebase origin master
 git push
 ````
 
-### 2.2.2 本地有多个ssh-key的情况
+#### 2.2.2 本地有多个ssh-key的情况
 
