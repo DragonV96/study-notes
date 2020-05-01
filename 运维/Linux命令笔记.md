@@ -1,17 +1,20 @@
 # Linux学习笔记(Cent OS7)
 
 - [1 常用命令](#1-常用命令)
-  - [1.1 创建](#11-创建)
-  - [1.2 删除](#12-删除)
-  - [1.3 查找](#13-查找)
-  - [1.4 安装centos必备库](#14-安装centos必备库)
-  - [1.5 查看系统信息](#15-查看系统信息)
-  - [1.6 进程](#16-进程)
-  - [1.7 添加环境变量](#17-添加环境变量)
-  - [1.8 添加插件命令](#18-添加插件命令)
-  - [1.9 防火墙配置](#19-防火墙配置)
-  - [1.10 权限](#110-权限)
-  - [1.11 添加快捷操作](#111-添加快捷操作)
+  - [1.1 文件操作](#11-文件操作)
+      - [1.1.1 创建](#111-创建)
+      - [1.1.2 删除](#112-删除)
+      - [1.1.3 搜索](#113-搜索)
+      - [1.1.4 编辑](#114-编辑)
+      - [1.1.5 运行](#115-运行)
+  - [1.2 安装centos必备库](#12-安装centos必备库)
+  - [1.3 查看系统信息](#13-查看系统信息)
+  - [1.4 进程](#14-进程)
+  - [1.5 添加环境变量](#15-添加环境变量)
+  - [1.6 添加插件命令](#16-添加插件命令)
+  - [1.7 防火墙配置](#17-防火墙配置)
+  - [1.8 权限](#18-权限)
+  - [1.9 添加快捷操作](#19-添加快捷操作)
 - [2 安装软件](#2-安装软件)
   - [2.1 安装jdk](#21-安装jdk)
   - [2.2 安装MAVEN](#22-安装MAVEN)
@@ -37,19 +40,44 @@
   - [4.3 jsp等命令无效](43-jsp等命令无效)
 - [5 高级命令](#5-高级命令)
   - [5.1 运行jar包](#51-运行jar包)
-  - [5.2 打开文件](#52-打开文件)
-  - [5.3 指定jmx文件执行Jmeter进行压测](#53-指定jmx文件执行Jmeter进行压测)
+  - [5.1 指定jmx文件执行Jmeter进行压测](#51-指定jmx文件执行Jmeter进行压测)
 - [附·骚操作](#附-骚操作)
 
 ## 1 常用命令
-### 1.1 创建
+### 1.1 文件操作
 
-**1.创建文件夹**
+#### 1.1.1 创建
 
+**1. 创建文件夹**
+
+````shell
+# 创建单级文件夹
+mkdir [文件夹名字]
+# 实例
+mkdir logs
+
+# 创建多级文件夹
+mkdir [文件夹路径]
+# 实例
+mkdir -p /usr/local/my-server/logs/info/
 ````
-mkdir 文件夹名字
-````
-### 1.2 删除
+**2. 创建文件**
+
+```shell
+# 创建文件
+touch [文件名字]
+# 实例
+touch start.sh
+
+# 创建并编辑文件，以下两种都可以
+vim [文件名字]
+vi [文件名字]
+# 实例
+vim start.sh
+vi start.sh
+```
+
+#### 1.1.2 删除
 
 **1.删除文件夹**
 
@@ -57,33 +85,38 @@ mkdir 文件夹名字
 
 - -f 就是直接强行删除，不作任何提示
 
-````
-rm -rf 目录名字
+````shell
+rm -rf [目录名字]
+# 实例
+rm -rf logs/
 ````
 
 **2.删除文件**
 
+````shell
+rm -f [文件名字]
+# 实例
+rm -rf 2020.log
 ````
-rm -f 文件名字
-````
-### 1.3 查找
+#### 1.1.3 搜索
 
-**1.查找文件**
+**1. 搜索文件**
 
 ````shell
-find    可以找到你想要的文件
-格式：  find [目录] [选项] [选项值]
-目录：去哪找，可以不写，默认代表当前目录
-选项：怎么找
+find [目标文件]
+# 格式：  find [目录] [选项] [选项值]
+# 目录：去哪找，可以不写，默认代表当前目录
+# 选项：怎么找
     >> -name   按照名字找
         可以使用通配符
     -size   按照大小找
         单位为  kmg   10k（等于10k）   +10k（大于10k）   -10k（小于10k）
-    -user   按照用户名
-    -group  按照组名
+    -user   按照用户名找
+    -group  按照组名找
     -maxdepth  -mindepth   限制查找的目录层级，默认递归查找所有
     -ctime  按照创建时间查找  单位是天
-选项值：找什么
+# 实例：
+# 选项值：找什么
     find / -name demo.txt
     find / -name \*.txt
     find / -size +10k
@@ -93,16 +126,15 @@ find    可以找到你想要的文件
     find / -mindepth 3 -maxdepth 5 -name \*.txt
 ````
 
-**2.查找文件内容**
+**2. 搜索文件内容**
 
 ````shell
-grep   查找的内容   文件路径
-
-实例：
+grep [查找的内容] [文件路径]
+# 实例：
 grep movie demo.txt
 grep movie ~/*.txt
 
-选项
+# 选项
     --color=auto   将颜色高亮显示
         给 grep 指令起一个别名   vi ~/.bashrc
         添加一行     alias grep='grep --color=auto'
@@ -113,11 +145,10 @@ grep movie ~/*.txt
     -r         递归查找，但是不能限制后缀，只能遍历所有
         grep -r that ~/*
     -l         只显示文件名，不显示内容
-
-实例：（显示当前目录下所有txt文件中含有xxx字段的文件）
+# 实例：（显示当前目录下所有txt文件中含有xxx字段的文件）
 grep -l xxx ~/test/*.txt
 
-正则表达式进行查找
+# 正则表达式进行查找
     \w(数字字母下划线)   
     \W(除了上面)
     \d(数字)
@@ -126,18 +157,90 @@ grep -l xxx ~/test/*.txt
     *(任意多个)
     +(至少1个)
     ?(0个或者1个)
-    te-st@163.com   abc_def@qq.com   lala@sina.cn   benben@meme.net
-    
-实例：（-E   使用正则表达式来进行匹配）
+    te-st@163.com   abc_def@qq.com   lala@sina.cn   benben@meme.net 
+# 实例：（-E   使用正则表达式来进行匹配）
 grep -E .*? demo.txt 
 
 grep --color=auto [要查找的关键字] [要查找的文件]
-
-实例：
+# 实例：
 grep --color=auto 56684444sva server.log
 grep --color=auto 56684444sva *.log
 ````
-### 1.4 安装centos必备库
+#### 1.1.4 编辑
+
+**1. 编辑文件内容**
+
+````shell
+vi [文件名字]
+# 或
+vim [文件名字]
+# 实例
+vi nginx.conf
+vim nginx.conf
+````
+
+**2. 编辑文件名/文件夹名**
+
+```shell
+move [原文件夹名字/文件名字] [新文件夹名字/文件名字]
+# 实例
+move nginx.conf 1.conf
+move nginx nginx666
+```
+
+#### 1.1.5 查看
+
+**1. 查看文件全部内容**
+
+```shell
+cat [文件名字]
+# 实例
+cat nginx.conf
+```
+
+**2.  查看文件头部内容**
+
+```shell
+head -[查看的行数] [文件名字]
+# 实例
+head -200 sys-info.log
+```
+
+**3.  查看文件尾部内容**
+
+```shell
+tail -[查看的行数] [文件名字]
+# 实例
+head -200 sys-info.log
+
+# 实时刷新文件内容
+tail -[查看的行数]f [文件名字]
+# 实例
+head -200f sys-info.log
+```
+
+#### 1.1.6 运行
+
+**1. 前台运行jar包**
+
+````shell
+# 实例
+java -jar miaosha.jar
+````
+
+> 打断后，程序会中断退出
+
+**2. 后台运行jar包**
+
+````shell
+# 实例
+nohup java -jar miaosha.jar &
+````
+
+- nohup 表示把jar包输出日志存放到当前文件夹下新生成的nohup.out中。
+- & 表示后台运行
+
+### 1.2 安装centos必备库
 
 **1.使用yum安装gcc**
 
@@ -156,7 +259,7 @@ sudo yum install -y vim
 ```
 yum clean all
 ```
-### 1.5 查看系统信息
+### 1.3 查看系统信息
 
 **1.查看本机网络信息（IP地址、网关、DNS等）**
 
@@ -175,7 +278,23 @@ ip addr
 ````
 pwd
 ````
-### 1.6 进程
+**4. 查看系统局部（用户进程）文件句柄限制数量**
+
+````shell
+ulimit -n
+````
+
+> centos7 默认限制为1024
+
+**5. 查看系统全局（系统进程）文件句柄限制数量**
+
+```shell
+cat /proc/sys/fs/file-max
+```
+
+> centos7 默认限制为几十万
+
+### 1.4 进程
 
 **1.检查占用8080端口的进程。**
 
@@ -200,21 +319,21 @@ kill -9 12345
 ```
 echo 3 > /proc/sys/vm/drop_caches
 ```
-### 1.7 添加环境变量
+### 1.5 添加环境变量
 
 **1.编辑系统环境文件**
 
 ````
 vim /etc/profile
 ````
-### 1.8 添加插件命令
+### 1.6 添加插件命令
 
 **1.安装wget命令**
 
 ````
 yum -y install wget
 ````
-### 1.9 防火墙配置
+### 1.7 防火墙配置
 
 **1.查看防火墙状态**（running表示正在运行，not running表示已停止）
 
@@ -225,7 +344,7 @@ systemctl status firewalld
 
 **2.开启/关闭/重启防火墙**
 
-```
+```shell
 systemctl stop firewalld		（关闭）
 systemctl start firewalld		（开启）
 firewall-cmd --reload			（重启）
@@ -234,24 +353,24 @@ service firewalld restart		（重启）
 
 **3.开启/关闭防火墙的开机自启**（进行关闭操作前需要提前关闭防火墙）
 
-```
+```shell
 systemctl disable firewalld		（关闭）
 systemctl enable firewalld		（开启）
 ```
 
 **4.查看防火墙已开放端口列表**
 
-```
+```shell
 firewall-cmd --permanent --list-port
 ```
 
 **5.开放/关闭指定端口，使其生效需要重启防火墙**（如3306，临时开放只需去掉`--perament`，重启虚拟机则自动失效）
 
-````
+````shell
 firewall-cmd --zone=public --add-port=3306/tcp --permanent		(开放)
 firewall-cmd --zone=public --remove-port=3306/tcp --permanent	(关闭)
 
-常用端口开放命令：
+# 常用端口开放命令：
 firewall-cmd --zone=public --add-port=3306-8080/tcp --permanent
 firewall-cmd --zone=public --add-port=80/http --permanent
 firewall-cmd --zone=public --add-port=443/https --permanent
@@ -262,42 +381,44 @@ firewall-cmd --zone=public --add-port=443/https --permanent
 ```
 firewall-cmd --zone=public --add-port=3306-8080/tcp --permanent
 ```
-### 1.10 权限
+### 1.8 权限
 
 **1. 给shell脚本可执行权限**
 
-````
+````shell
 chmod +x [脚本文件名].sh
 
-实例：
+# 实例：
 chmod +x deploy-network.sh
 ````
 
 **2. 执行shell脚本命令**
 
-````
+````shell
 ./[脚本文件名].sh
 
-实例：
+# 实例：
 ./deploy-network.sh
 ````
-### 1.11 添加快捷操作
+### 1.9 添加快捷操作
 
 **1. 添加快捷操作**（如任意位置启动nginx）
 
-````
-第一步：执行命令编辑.bashrc文件
+````shell
+# 第一步：执行命令编辑.bashrc文件
 vim ~/.bashrc
-或
+# 或
 vi ~/.bashrc
 
-第二步：按a进入编辑状态，新起一行输入（路径根据自己实际情况设定）：
+# 第二步：按a进入编辑状态，新起一行输入（路径根据自己实际情况设定）：
 alias nginx="bash /usr/local/nginx/sbin/nginx"
 
-第三步：按下ESC，然后输入:wq保存更改并退出
-第四步：执行命令使更改生效
+# 第三步：按下ESC，然后输入:wq保存更改并退出
+# 第四步：执行命令使更改生效
 source ~/.bashrc
 ````
+
+
 ## 2 安装软件
 
 默认前置步骤都是已经将相应的linux压缩包通过xftp上传至linux系统目录下。
@@ -912,29 +1033,14 @@ yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
 
 ## 5 高级命令
 
-### 5.1 运行jar包
-
-````
-nohup java -jar miaosha.jar &
-````
-
-nohup表示把jar包输出日志存放到当前文件夹下新生成的nohup.out中。
-
-### 5.2 打开文件
-
-````
-tail -f nohut.out
-````
-
-打开nohut.out文件
-
-### 5.3 指定jmx文件执行Jmeter进行压测
+### 5.1 指定jmx文件执行Jmeter进行压测
 
 ````
 ./jarCollection/apache-jmeter-5.1.1/bin/jmeter.sh -n -t to_list.jmx -l result.jtl
 ````
 
 将jmeter压测完的数据保存在result.jtl文件中。(`-n`：以NoGUI方式运行脚本;  `-t`：后面接脚本名称;`-l`：后面接日志名称，保存运行结果)
+
 ## 附·骚操作
 
 ![1571121598913](assets/1571121598913.png)
