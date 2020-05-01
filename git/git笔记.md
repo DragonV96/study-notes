@@ -360,3 +360,50 @@ git push
 
 #### 2.2.2 本地有多个ssh-key的情况
 
+## 4 常见问题
+
+### 4.1 误操作reset后恢复本地代码
+
+将本地git版本用 hard 模式回退到历史某一版本时，想要恢复原来的版本。
+
+分三种情况：
+
+1）没有 commit ，也没有 add
+
+- IEAD 中挨个右键文件，在 local history 中查看并恢复
+- 不行则直接找磁盘数据恢复工具或者大佬
+- 再不行就加班重新写一遍
+
+2）没有 commit ，但是 add 了
+
+①执行命令，找回文件
+
+````shell
+git fsck --lost-found
+````
+
+②进入项目git目录下的 /.git/lost-found/other ，这里有你 add 过的文件，挨个文件恢复。
+
+③找回本地仓库里边最近add的60个文件
+
+````shell
+find .git/objects -type f | xargs ls -lt | sed 60q
+````
+
+3）有过 commit
+
+①执行命令，查看历史 commit 过的记录
+
+````
+git reflog
+````
+
+![1588144262111](assets/1588144262111.png)
+
+②选择需要恢复的节点，执行即可恢复，如 HEAD@{2} 
+
+````shell
+git reset --hard HEAD@{2} 
+````
+
+![1588144300276](assets/1588144300276.png)
