@@ -407,3 +407,30 @@ git reset --hard HEAD@{2}
 ````
 
 ![1588144300276](assets/1588144300276.png)
+
+### 4.2 提交时报未合并代码错误
+
+报错原因：Committing is not possible because you have unmerged files.（因为你没有合并代码，所以不允许提交）
+
+1）查看未提交代码文件
+
+````shell
+git diff
+````
+
+2）查看git状态
+
+```shell
+git status
+```
+
+![1588729966117](assets/1588729966117.png)
+
+3）如果不需要的话，移除未合并代码（xxx表示上图整个路径+文件名）即可
+
+```shell
+git rm xxx.js
+git rm xxx.js
+```
+
+![1588730161370](assets/1588730161370.png)
