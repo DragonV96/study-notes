@@ -6,17 +6,37 @@
 
 ````sql
 -- 1表示每次事务的redo log都直接持久化到磁盘，保证MySQL异常重启之后数据不丢失
-show variables like 'innodb_flush_log_at_trx_commit'
+show variables like 'innodb_flush_log_at_trx_commit';
 
 -- 1表示每次事务的binlog都持久化到磁盘，保证MySQL异常重启之后binlog不丢失
-show variables like 'sync_binlog'
+show variables like 'sync_binlog';
 ````
 
-### 1.2 事务相关查询操作
+### 1.2 事务相关查询
 
 ````sql
 -- 查询长事务（查找持续时间超过60s的事务）
 select * from information_schema.innodb_trx where TIME_TO_SEC(timediff(now(),trx_started))>60
+````
+
+### 1.3 用户状态查询
+
+````sql
+-- 查询用户连接状态（结果集的 Command 字段：Sleep 表示空闲，Query 表示查询）
+show processlist;
+````
+
+### 1.4 查询缓存
+
+**1. 不使用查询缓存**
+
+将 query_cache_type 设置为 DEMAND
+
+**2. 按需使用查询缓存**
+
+````sql
+-- 查询语句加上 SQL_CACHE 参数
+select SQL_CACHE * from T
 ````
 
 ## 2 日志
