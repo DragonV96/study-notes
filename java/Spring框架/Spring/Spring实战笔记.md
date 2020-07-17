@@ -1,5 +1,3 @@
-
-
 # Spring实战笔记
 
 ## 1 Spring核心
@@ -17,7 +15,7 @@ Spring目标：简化 Java 开发，具体体现在：
 
 ### 1.2 bean
 
-**2. 注解**
+**1. 注解**
 
 - `@ComponentScan` ：启用组件扫描
   - 不指定包路径默认扫描当前类所在的包及其所有子包路径（Spring 默认不开启）
@@ -31,11 +29,9 @@ Spring目标：简化 Java 开发，具体体现在：
 - `@Inject` ：启用自动装配（可替换 `@Autowired` ）
 - `@Bean` ：返回一个注册为 Spring 应用上下文的 bean 对象
 
-#### 1.2.3 bean的生命周期
+**2. bean的生命周期**
 
 ![Bean的生命周期](assets/Bean的生命周期.jpg)
-
-**流程**
 
 ①Spring 对 bean 进行实例化；
 
@@ -57,7 +53,31 @@ Spring目标：简化 Java 开发，具体体现在：
 
 ⑩如果 bean 实现了 DisposableBean 接口，Spring 将调用它的destroy() 接口方法；同样，若 bean 使用 destroy-method 声明了销毁方法，该方法也会被调用
 
-### 1.2 应用上下文
+### 1.3 控制反转 IOC
+
+**1. 概念**
+
+将对象的控制权交给 Spring 管理。
+
+**2. 实现方式**
+
+依赖注入（DI），有三种方式：
+
+- 构造器注入
+- setter 注入
+- 接口注入
+
+**3. 初始化流程**
+
+①定位XML 或 Bean的注解；
+
+②读取 Resource；
+
+③获取 BeanDefinition；
+
+④注册 Bean。
+
+### 1.4 应用上下文
 
 **Spring 常见的应用上下文**
 
@@ -67,7 +87,7 @@ Spring目标：简化 Java 开发，具体体现在：
 - FileSystemXmlApplicationContext：从文件系统下的一个或多个 XML 配置文件中加载上下文定义
 - XmlWebApplicationContext：从 Web 应用下的一个或多个 XML 配置文件中加载上下文定义
 
-### 1.3 Spring模块
+### 1.5 Spring模块
 
 ![spring overview](assets/spring-overview.png)
 
@@ -370,11 +390,13 @@ SpEL的特性：
 
 **2. 分类**
 
-- 前置通知（Before）：在目标方法被调用之前调用通知功能
-- 后置通知（After）：在目标方法完成之后调用通知，此时不会关心方法的输出是什么
-- 返回通知（After-returning）：在目标方法成功执行之后调用通知
-- 异常通知（After-throwing）：在目标方法抛出异常后调用通知
-- 环绕通知（Around）：通知包裹了被通知的方法，在被通知的方法调用之前和调用之后执行自定义的行为
+通知 Advice 分为五个类型（对应的 AspectJ 注解）：
+
+- 前置通知（@Before）：在目标方法被调用之前调用通知功能
+- 后置通知（@After）：在目标方法完成之后或抛出异常后调用通知，此时不会关心方法的输出是什么
+- 返回通知（@AfterReturning）：在目标方法成功执行之后调用通知
+- 异常通知（@AfterThrowing）：在目标方法抛出异常后调用通知
+- 环绕通知（@Around）：通知包裹了被通知的方法，在被通知的方法调用之前和调用之后执行自定义的行为
 
 #### 4.1.2 连接点 Join point
 
@@ -384,11 +406,25 @@ SpEL的特性：
 
 #### 4.1.3 切点 Pointcut
 
+**1. 概念**
+
 切点定义了通知被应用的具体位置（连接点）。
+
+**2. 使用方式**
+
+在需要声明为切点的方法上开启 `@Pointcut` 注解即可。
 
 #### 4.1.4 切面 Aspect
 
+**1. 概念**
+
 切面是通知和切点的结合。
+
+**2. 使用方式**
+
+①在需要声明为切面的类上开启 `@Aspect` 注解；
+
+②在声明切面类为 bean 的配置类上开启 `@EnableAspectJAutoProxy` 注解，启用自动代理功能。
 
 #### 4.1.5 引入 Introduction
 
@@ -452,15 +488,41 @@ Spring AOP 对 AspectJ 支持的切点指示器如下表。
 - 只有 execution 指示器是实际执行匹配的
 - 其他指示器都是限制匹配的
 
+#### 4.1.3 AOP 为对象增加方法
 
+AOP 不仅可以对方法增加新的功能，还能对一个对象增加新的方法。
 
+**1. 使用方式**
 
+通过 `@DeclareParents` 注解修饰需要新增方法的 bean。
 
+注解由三部分组成：
 
+- value：指定哪种类型的 bean 引入该接口
+- defaultImpl：指定了为引入功能提供实现的类
+- @DeclareParents：标注的静态属性知名了要引入的接口
 
+**2. 局限性**
 
+只能为有源码的通知类添加注解。
 
+**3. 无源码的解决方案**
 
+在 XML 中声明切面，XML 中的 AOP 配置元素如下表。
+
+| AOP 配置元素             | 用途                                                         |
+| ------------------------ | ------------------------------------------------------------ |
+| \<aop:advisor>           | 定义 AOP 通知器                                              |
+| \<aop:after>             | 定义 AOP 后置通知（不管被通知的方法是否执行成功）            |
+| \<aop:after-returning>   | 定义 AOP 返回通知                                            |
+| \<aop:after-throwing>    | 定义 AOP 异常通知                                            |
+| \<aop:around>            | 定义 AOP 环绕通知                                            |
+| \<aop:aspect>            | 定义一个切面                                                 |
+| \<aop:aspectj-autoproxy> | 启用 @AspectJ 注解驱动的切面                                 |
+| \<aop:before>            | 定义一个 AOP 前置通知                                        |
+| \<aop:config>            | 顶层的 AOP 配置元素，大多数 \<aop:*>元素必须包含在\<aop:config>元素内 |
+| \<aop:declare-parents>   | 以透明的方式为被通知的对象引入额外的接口                     |
+| \<aop:pointcut>          | 定义一个切点                                                 |
 
 
 
