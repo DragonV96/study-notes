@@ -61,7 +61,7 @@ Spring目标：简化 Java 开发，具体体现在：
 
 **2. 实现方式**
 
-依赖注入（DI），有三种方式：
+依赖注入（DI，即Dependence Injection），有三种注入方式：
 
 - 构造器注入
 - setter 注入
@@ -524,54 +524,31 @@ AOP 不仅可以对方法增加新的功能，还能对一个对象增加新的�
 | \<aop:declare-parents>   | 以透明的方式为被通知的对象引入额外的接口                     |
 | \<aop:pointcut>          | 定义一个切点                                                 |
 
+## 5 SpringMVC
 
+### 5.1 SpringMVC组件
 
+- DispatcherServlet：负责将请求路由到其他组件中；
+- 处理器映射（Handler mapping）：根据请求路由寻找对应的处理器；
+- 控制器（Controller）：执行业务逻辑，并返回结果；
+- 视图解析器（View resolver）：将逻辑视图名匹配对应的视图实现；
+- 模型（model）：控制器完成处理逻辑后返回给用户并在浏览器展示的的信息；
+- 视图（view）：友好的界面展示代码，通常是 HTML、JSP 等。
 
+### 5.2 SpringMVC流程
 
+![image-20200717124849697](assets/image-20200717124849697.png)
 
+①用户请求先通过前端控制器 DispatcherServlet；
 
+②DispatcherServlet 查询一个或多个处理器映射（Handler mapping），处理器映射根据 URL 信息选择对应的控制器信息返回给 DispatcherServlet；
 
+③DispatcherServlet 将请求发给选中的控制器，控制器拿到请求数据，交给 Service 层去执行业务逻辑；
 
+④控制器将处理完返回的模型和逻辑视图名发送到 DispatcherServlet；
 
+⑤DispatcherServlet 使用视图解析器（View resolver）将逻辑视图名匹配对应的视图实现；
 
+⑥渲染视图；
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-依赖注入（DI，即Dependence Injection）
-
-**1. 实现方式**
-
-- 构造器注入
-- Setter注入
-- 接口注入
-
- 
+⑦返回响应到用户。
