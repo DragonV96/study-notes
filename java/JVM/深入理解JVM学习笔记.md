@@ -814,6 +814,8 @@ Parallel Scavenge 收集器的老年代版本。
 
 #### 2.3.6 CMS收集器
 
+CMS（全称 Concurrent Mark Sweep）并发标记收集器。
+
 **1. 目标**
 
 获取最短回收停顿时间。
