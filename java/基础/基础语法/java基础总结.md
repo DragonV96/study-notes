@@ -1,5 +1,24 @@
 # java基础总结
 
+  * [1 String、Long 源码解析和面试题](#1-stringlong-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E5%92%8C%E9%9D%A2%E8%AF%95%E9%A2%98)
+    * [1\.1 String](#11-string)
+    * [1\.2 Long](#12-long)
+    * [1\.3 面试题](#13-%E9%9D%A2%E8%AF%95%E9%A2%98)
+  * [2 Java常用关键字理解](#2-java%E5%B8%B8%E7%94%A8%E5%85%B3%E9%94%AE%E5%AD%97%E7%90%86%E8%A7%A3)
+    * [2\.1 static](#21-static)
+    * [2\.2 final](#22-final)
+    * [2\.3 try、catch、finally](#23-trycatchfinally)
+    * [2\.4 volatile](#24-volatile)
+    * [2\.5 transient](#25-transient)
+    * [2\.6 default](#26-default)
+    * [2\.7 面试题](#27-%E9%9D%A2%E8%AF%95%E9%A2%98)
+  * [3 Arrays、Collections、Objects 常用方法源码解析](#3-arrayscollectionsobjects-%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90)
+    * [3\.1 工具类通用特征](#31-%E5%B7%A5%E5%85%B7%E7%B1%BB%E9%80%9A%E7%94%A8%E7%89%B9%E5%BE%81)
+    * [3\.2 Arrays](#32-arrays)
+    * [3\.3 Collections](#33-collections)
+    * [3\.4 Objects](#34-objects)
+    * [3\.5 面试题](#35-%E9%9D%A2%E8%AF%95%E9%A2%98)
+
 ## 1 String、Long 源码解析和面试题
 
 ### 1.1 String
