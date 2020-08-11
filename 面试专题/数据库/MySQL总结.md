@@ -1,5 +1,3 @@
-
-
 # MySQL总结
 
 ## 1 MySQL内部

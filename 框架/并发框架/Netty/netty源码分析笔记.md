@@ -1,8 +1,8 @@
-<h1 style="font-weight:bold;"><center>netty源码分析笔记</center></h1>
+# netty源码分析笔记
 
-# 第一章 Netty基本组件
+## 1 Netty基本组件
 
-## Netty基本组件概念
+### Netty基本组件概念
 
 ​		**NioEventLoop**：开启两种类型的线程，一个是监听客户端的连接，另一个是处理客户端的读写。
 
@@ -14,9 +14,9 @@
 
 ​		**ByteBuf**：对数据读写的操作类#。
 
-# 第二章 Netty的启动过程
+## 2 Netty的启动过程
 
-## 2.1 创建服务端Channel
+### 2.1 创建服务端Channel
 
 **创建服务端Channel流程：**
 
@@ -38,9 +38,9 @@
 
 ​	→AbstractChannel()*（进入函数内部）*				（创建id，unsafe，pipeline）
 
-## 2.2 初始化服务端Channel
+### 2.2 初始化服务端Channel
 
-## 2.3 注册selector
+### 2.3 注册selector
 
-## 2.4 端口绑定
+### 2.4 端口绑定
 

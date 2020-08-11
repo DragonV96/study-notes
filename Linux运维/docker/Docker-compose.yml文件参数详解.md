@@ -1,4 +1,4 @@
-# docker-compose.yml文件详解
+# Docker-compose.yml文件参数详解
 
 ## Compose和Docker兼容性
 ​    Compose 文件格式有3个版本,分别为1, 2.x 和 3.x

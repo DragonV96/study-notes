@@ -1,15 +1,15 @@
-- [1 基础概念](#1-基础概念)
-  - [1.1 URI与URL](#11-URI与URL)
-  - [1.2 Cookie](#12-Cookie)
-  - [1.3 Session](#13-Session)
-- [2 HTTP请求](#2-HTTP请求)
-  - [2.1 HTTP请求报文](#21-HTTP请求报文)
-  - [2.2 HTTP/1.1请求方法](#22-HTTP/1.1请求方法)
-- [3 HTTP响应](#3-HTTP响应)
-  - [3.1 HTTP响应报文](#31-HTTP响应报文)
-  - [3.2 HTTP响应状态码](#32-HTTP响应状态码)
-
 # HTTP协议
+
+  * [1 基础概念](#1-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5)
+    * [1\.1 URI与URL](#11-uri%E4%B8%8Eurl)
+    * [1\.2 Cookie](#12-cookie)
+    * [1\.3 Session](#13-session)
+  * [2 HTTP请求](#2-http%E8%AF%B7%E6%B1%82)
+    * [2\.1 HTTP请求报文](#21-http%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87)
+    * [2\.2 HTTP/1\.1请求方法](#22-http11%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95)
+  * [3 HTTP响应](#3-http%E5%93%8D%E5%BA%94)
+    * [3\.1 HTTP响应报文](#31-http%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87)
+    * [3\.2 HTTP响应状态码](#32-http%E5%93%8D%E5%BA%94%E7%8A%B6%E6%80%81%E7%A0%81)
 
 ## 1 基础概念
 
