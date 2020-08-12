@@ -248,3 +248,4 @@
 - [正则表达式大全（未验证慎用）](https://github.com/DragonV96/study-notes/blob/master/表达式/正则/正则表达式大全.md)
 - [正则表达式学习笔记](https://github.com/DragonV96/study-notes/blob/master/表达式/正则/正则表达式学习笔记.md)
 
+> 部分总结笔记来自于知名开源项目 [advanced-java](https://github.com/doocs/advanced-java)。
