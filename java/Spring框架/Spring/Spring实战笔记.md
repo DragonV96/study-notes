@@ -410,6 +410,8 @@ SpEL的特性：
 
 ### 4.1 AOP 基本概念
 
+AOP，面向切面编程，它有三个核心概念：
+
 - 通知（advice）
 - 切点（pointcut）
 - 连接点（joinpoint）
