@@ -101,7 +101,7 @@
 
 #### Spring Boot
 
-- [SpringBoot 实战笔记](https://github.com/DragonV96/study-notes/blob/master/java/Spring框架/SpringBoot/SpringBoot实战笔记.md)
+- [SpringBoot 实战笔记](https://github.com/DragonV96/study-notes/blob/master/java/Spring框架/springboot/SpringBoot实战笔记.md)
 
 #### SpringMVC
 
@@ -140,10 +140,10 @@
 
 ### MySQL
 
-- [MySQL 操作笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/MySQL操作笔记.md)
-- [MySQL 实战笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/MySQL实战笔记.md)
-- [MySQL 架构设计学习笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/MySQL架构设计学习笔记.md)
-- [MySQL 学习笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/MySQL学习笔记.md)
+- [MySQL 操作笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/Mysql操作笔记.md)
+- [MySQL 实战笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/Mysql实战笔记.md)
+- [MySQL 架构设计学习笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/Mysql架构设计学习笔记.md)
+- [MySQL 学习笔记](https://github.com/DragonV96/study-notes/blob/master/数据库/MySQL/Mysql学习笔记.md)
 
 ## 4 中间件
 
@@ -182,7 +182,7 @@
 
 ### 微服务
 
-- [SpringCloud 学习笔记](https://github.com/DragonV96/study-notes/blob/master/java/springcloud/SpringCloud学习笔记.md)
+- [SpringCloud 学习笔记](https://github.com/DragonV96/study-notes/blob/master/分布式/微服务框架/SpringCloud/SpringCloud学习笔记.md)
 - Dubbo
 
 ### 分布式事务
@@ -195,7 +195,7 @@
 
 ### 分库分表
 
-- [分库分表总结总结](https://github.com/DragonV96/study-notes/blob/master/分布式/分库分表/分库分表总结总结.md)
+- [分库分表总结总结](https://github.com/DragonV96/study-notes/blob/master/分布式/分库分表/分库分表总结.md)
 
 ## 6 数据结构与算法
 
@@ -222,13 +222,13 @@
 ## 9 Linux 运维
 ### Linux
 
-- [Linux 学习笔记(Cent OS7)](https://github.com/DragonV96/study-notes/blob/master/Linux运维/Linux/Linux学习笔记.md)
+- [Linux 命令笔记(Cent OS7)](https://github.com/DragonV96/study-notes/blob/master/Linux运维/Linux/Linux命令笔记.md)
 - [Shell 脚本笔记](https://github.com/DragonV96/study-notes/blob/master/Linux运维/Linux/Shell脚本笔记.md)
 
 ### Docker
 
-- [Docker 命令笔记](https://github.com/DragonV96/study-notes/blob/master/Linux运维/Docker命令笔记.md)
-- [Docker-compose.yml 文件参数详解](https://github.com/DragonV96/study-notes/blob/master/Linux运维/Docker/Docker-compose.yml文件参数详解.md)
+- [Docker 命令笔记](https://github.com/DragonV96/study-notes/blob/master/Linux运维/docker/Docker命令笔记.md)
+- [Docker-compose.yml 文件参数详解](https://github.com/DragonV96/study-notes/blob/master/Linux运维/docker/Docker-compose.yml文件参数详解.md)
 
 ### Kubernetes
 
@@ -240,13 +240,13 @@
 
 ### Maven
 
-- [Maven 学习笔记](https://github.com/DragonV96/study-notes/blob/master/工具/Maven/Maven学习笔记.md)
+- [Maven 学习笔记](https://github.com/DragonV96/study-notes/blob/master/工具/maven/Maven学习笔记.md)
 
 ## 11 表达式
 
 ### Cron 表达式
 
-- [Cron 表达式学习笔记](https://github.com/DragonV96/study-notes/blob/master/表达式/Crontab/Cron表达式学习笔记.md)
+- [Cron 表达式学习笔记](https://github.com/DragonV96/study-notes/blob/master/表达式/crontab/cron表达式学习笔记.md)
 
 ### 正则表达式
 
