@@ -97,11 +97,11 @@
 
 #### Spring
 
-- [Spring 实战笔记](https://github.com/DragonV96/study-notes/blob/master/java/Spring/Spring框架/Spring实战笔记.md)
+- [Spring 实战笔记](https://github.com/DragonV96/study-notes/blob/master/java/Spring框架/Spring/Spring实战笔记.md)
 
 #### Spring Boot
 
-- [Spring 实战笔记](https://github.com/DragonV96/study-notes/blob/master/java/Spring框架/SpringBoot/Spring Boot实战笔记.md)
+- [SpringBoot 实战笔记](https://github.com/DragonV96/study-notes/blob/master/java/Spring框架/SpringBoot/SpringBoot实战笔记.md)
 
 #### SpringMVC
 
