@@ -107,7 +107,7 @@ docker save -o [镜像文件完整路径及命名] [当前镜像标签名]
 docker save -o /usr/local/comtom/dockerimages/rabbitmq.tar registry.comtom.cn:2443/gd-v5/rabbitmq:3.8.0
 ````
 
-#### 1.1.3 删除容器及镜像(以mysql为例)
+#### 1.1.3 删除容器及镜像
 
 ​	1.查看docker正在运行的容器情况
 
@@ -140,6 +140,38 @@ docker rmi 1a8eb1e42729
 docker rmi mysql:latest
 
 docker rmi -f mysql:latest		(强制删除镜像)
+````
+
+#### 1.1.4 批量操作容器及镜像
+
+​	1.查看所有容器
+
+````shell
+docker ps -a
+````
+
+​	2.停止所有容器
+
+````shell
+docker stop $(docker ps -aq)
+````
+
+​	3.删除所有已停止的容器
+
+````shell
+docker stop $(docker ps -q -f status=exited)
+````
+
+​	4.删除所有容器
+
+````shell
+docker rm $(docker ps -aq)
+````
+
+​	5.删除所有镜像
+
+````shell
+docker rmi $(docker images -aq)
 ````
 
 ### 1.2 Docker-compose命令
