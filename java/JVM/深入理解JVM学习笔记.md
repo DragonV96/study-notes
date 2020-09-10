@@ -1054,6 +1054,522 @@ Init Mark 表示初始标记，Finish Mark 表示最终标记。
 
 ## 3 类文件结构
 
+### 3.1 class 字节码文件
+
+**1. 基本概念**
+
+- 全限定名：类全名，其中“.”替换成“/”，结尾“;”表示结束。（如 “java/util/HashMap;”）
+- 简单名称：没有类型和参数修饰的方法或字段名称。
+- 描述符：用来描述字段的数据类型、方法的参数列表（包括数量、类型以及顺序）和返回值。
+
+**2. 特性**
+
+class 字节码文件有两个特性：
+
+- 平台无关性：跨 x86、windows、mac os 等多个平台。
+- 语言无关性：支持多种语言编译为字节码文件，如 Kotlin、Clojure、Groovy、JRuby、JPython、Scala 等。
+
+> 任何一个 Class 文件都对应着唯一的一个类或接口的定义信息；反过来，类或接口并不一定都得定义在文件里（如类或接口也可以动态生成，直接送入类加载器中）。
+
+※注意：Class 文件结构中只有常量池的容量计数是从1开始，对于其他集合类型，包括接口索引集合、字段表集合、方法表集合等的容量计数都是从0开始。
+
+#### 3.1.1 class 类文件结构
+
+**1. 文件组成**
+
+Class 文件是一组以8个字节为基础单位的二进制流，各个数据项目严格         按照顺序紧凑地排列在文件之中，中间没有添加任何分隔符。
+
+> 整个 Class 文件中存储的内容几乎全部是程序运行的必要据，没有空隙存在。当遇到需要占用8个字节以上空间的数据项时，则会按照高位在前的方式分割成若干个8个字节进行存储。
+
+**2. 数据类型**
+
+Class 文件格式采用一种类似于 C 语言结构体的伪结构来存储数据，分为两种类型：
+
+- 无符号数
+- 表
+
+**3. 无符号数**
+
+1）描述对象
+
+无符号数可以用来描述：
+
+- 数字
+- 索引引用
+- 数量值
+- 按照 UTF-8 编码构成字符串值
+
+2）分类
+
+无符号数分为4类：
+
+- u1：表示1个字节的无符号数
+- u2：表示2个字节的无符号数
+- u4：表示4个字节的无符号数
+- u4：表示1个字节的无符号数
+- u8：表示8个字节的无符号数
+
+**4. 表**
+
+1）概念
+
+表是由多个无符号数或者其他表作为数据项构成的复合数据类型。
+
+> 所有表的命名都习惯性地以“_info”结尾。
+
+2）描述对象
+
+用于描述有层次关系的复合结构的数据。
+
+> 整个 Class 文件本质上也可以视作是一张表。
+
+**5. Class 文件格式**
+
+| 类型           | 名称                | 数量                    |
+| :------------- | ------------------- | ----------------------- |
+| u4             | magic               | 1                       |
+| u2             | minor_version       | 1                       |
+| u2             | major_version       | 1                       |
+| u2             | constant_pool_count | 1                       |
+| cp_info        | constant_pool       | constant_pool_count - 1 |
+| u2             | access_flags        | 1                       |
+| u2             | this_class          | 1                       |
+| u2             | super_class         | 1                       |
+| u2             | interfaces_count    | 1                       |
+| u2             | interfaces          | interfaces_count        |
+| u2             | fields_count        | 1                       |
+| field_info     | fields              | fields_count            |
+| u2             | methods_count       | 1                       |
+| method_info    | methods             | methods_count           |
+| u2             | attributes_count    | 1                       |
+| attribute_info | attributes          | attributes_count        |
+
+> 集合：同一类型（无符号数或表）但数量不定的多个连续数据。
+
+#### 3.1.2 魔数
+
+**1. 概念**
+
+魔数（Magic Number）每个 Class 文件的头4个字节，值为 0xCAFEBABE。
+
+**2. 作用**
+
+确定这个文件是否为一个能被虚拟机接受的 Class 文件。
+
+#### 3.1.3 Class 文件的版本
+
+**1. 概念**
+
+魔数后面的4个字节存储的是 Class 文件的版本号，分为两类：
+
+- 次版本号（Minor Version）：第5、6个字节
+- 主版本号（Major Version）：第7、8个字节
+
+**2. 规则**
+
+- Java 的版本号是从45开始。
+- 高版本的 JDK 能向下兼容以前版本的 Class 文件，但不能运行以后版本的 Class 文件。
+
+> 《Java 虚拟机规范》在 Class 文件校验部分明确要求了即使文件格式并未发生任何变化，虚拟机也必须拒绝执行超过其版本号的 Class 文件。
+
+#### 3.1.4 常量池
+
+**1. 概念**
+
+次、主版本号后面的是常量池入口，入口有一项 u2 类型的数据，表示常量池容量计数值（constant_pool_count）。
+
+> 容量计数值量计数是从1开始，而不是0。其中，0用来表示不引用任何一个常量池项目。
+
+**2. 特性**
+
+- Class 文件结构中与其他项目关联最多的数据
+- 占用 Class 文件空间最大的数据项目之一
+- 在 Class 文件中第一个出现的表类型数据项目
+
+**3. 组成结构**
+
+常量池中主要存放两大类常量：
+
+- 字面量（Literal）
+- 符号引用（Symbolic References）
+
+1）字面量
+
+字面量偏向于 Java 语言层面的常量：
+
+- 文本字符串
+- 被声明为 final 的常量值
+
+2）符号引用
+
+符号引用偏向于编译原理方面的常量：
+
+- 被模块导出或者开放的包（Package）
+- 类和接口的全限定名（Fully Qualified Name） 
+- 字段的名称和描述符（Descriptor） 
+- 方法的名称和描述符
+- 方法句柄和方法类型（Method Handle、Method Type、Invoke Dynamic） 
+- 动态调用点和动态常量（Dynamically-Computed Call Site、Dynamically-Computed Constant）
+
+**4. 分类**
+
+截至 JDK 13，常量表中分别有17种不同数据类型的常量如下表。
+
+| 类型                             | 标志 | 描述                           |
+| -------------------------------- | ---- | ------------------------------ |
+| CONSTANT_Utf8_info               | 1    | UTF-8 编码的字符串             |
+| CONSTANT_Integer_info            | 3    | 整型字面量                     |
+| CONSTANT_Float_info              | 4    | 浮点型字面量                   |
+| CONSTANT_Long_info               | 5    | 长整型字面量                   |
+| CONSTANT_Double_info             | 6    | 双精度浮点型字面量             |
+| CONSTANT_Class_info              | 7    | 类或接口的符号引用             |
+| CONSTANT_String_info             | 8    | 字符串类型字面量               |
+| CONSTANT_Fieldref_info           | 9    | 字段的符号引用                 |
+| CONSTANT_Methodref_info          | 10   | 类中方法的符号引用             |
+| CONSTANT_InterfaceMethodref_info | 11   | 接口中方法的符号引用           |
+| CONSTANT_NameAndType_info        | 12   | 字段或方法的部分符号引用       |
+| CONSTANT_MethodHandle_info       | 15   | 表示方法句柄                   |
+| CONSTANT_MethodType_info         | 16   | 表示方法类型                   |
+| CONSTANT_Dynamic_info            | 17   | 表示一个动态计算常量           |
+| CONSTANT_InvokeDynamic_info      | 18   | 表示一个动态方法调用点         |
+| CONSTANT_Module_info             | 19   | 表示一个模块                   |
+| CONSTANT_Package_info            | 20   | 表示一个模块中开放或者导出的包 |
+
+**5. 17种数据类型的常量结构**
+
+常量池中的17种数据类型的结构如下：
+
+1）CONSTANT_Utf8_info
+
+UTF-8 编码的字符串。
+
+| 结构   | 类型 | 描述                                |
+| ------ | ---- | ----------------------------------- |
+| tag    | u1   | 值为1                               |
+| length | u2   | UTF-8 编码的字符串占用的字节数      |
+| bytes  | u1   | 长度为 length 的 UTF-8 编码的字符串 |
+
+2）CONSTANT_Integer_info
+
+整型字面量。
+
+| 结构  | 类型 | 描述                      |
+| ----- | ---- | ------------------------- |
+| tag   | u1   | 值为3                     |
+| bytes | u4   | 按照高位在前存储的 int 值 |
+
+3）CONSTANT_Float_info
+
+浮点型字面量。
+
+| 结构  | 类型 | 描述                        |
+| ----- | ---- | --------------------------- |
+| tag   | u1   | 值为4                       |
+| bytes | u4   | 按照高位在前存储的 float 值 |
+
+4）CONSTANT_Long_info
+
+长整型字面量。
+
+| 结构  | 类型 | 描述                       |
+| ----- | ---- | -------------------------- |
+| tag   | u1   | 值为5                      |
+| bytes | u8   | 按照高位在前存储的 long 值 |
+
+5）CONSTANT_Double_info
+
+双精度浮点型字面量。
+
+| 结构  | 类型 | 描述                         |
+| ----- | ---- | ---------------------------- |
+| tag   | u1   | 值为6                        |
+| bytes | u8   | 按照高位在前存储的 double 值 |
+
+6）CONSTANT_Class_info
+
+类或接口的符号引用。
+
+| 结构  | 类型 | 描述                     |
+| ----- | ---- | ------------------------ |
+| tag   | u1   | 值为7                    |
+| index | u2   | 指向全限定名常量项的索引 |
+
+7）CONSTANT_String_info
+
+字符串类型字面量。
+
+| 结构  | 类型 | 描述                   |
+| ----- | ---- | ---------------------- |
+| tag   | u1   | 值为8                  |
+| index | u2   | 指向字符串字面量的索引 |
+
+8）CONSTANT_Fieldref_info
+
+字段的符号引用。
+
+| 结构  | 类型 | 描述                                                        |
+| ----- | ---- | ----------------------------------------------------------- |
+| tag   | u1   | 值为9                                                       |
+| index | u2   | 指向声明字段的类或者接口描述符 CONSTANT_Class_info 的索引项 |
+| index | u2   | 指向字段描述符 CONSTANT_NameAndType 的索引项                |
+
+9）CONSTANT_Methodref_info
+
+类中方法的符号引用。
+
+| 结构  | 类型 | 描述                                                |
+| ----- | ---- | --------------------------------------------------- |
+| tag   | u1   | 值为10                                              |
+| index | u2   | 指向声明方法的类描述符 CONSTANT_Class_info 的索引项 |
+| index | u2   | 指向名称及类型描述符 CONSTANT_NameAndType 的索引项  |
+
+10）CONSTANT_InterfaceMethodref_info
+
+  接口中方法的符号引用。
+
+| 结构  | 类型 | 描述                                                  |
+| ----- | ---- | ----------------------------------------------------- |
+| tag   | u1   | 值为11                                                |
+| index | u2   | 指向声明方法的接口描述符 CONSTANT_Class_info 的索引项 |
+| index | u2   | 指向名称及类型描述符 CONSTANT_NameAndType 的索引项    |
+
+11）CONSTANT_NameAndType_info
+
+字段或方法的部分符号引用。
+
+| 结构  | 类型 | 描述                               |
+| ----- | ---- | ---------------------------------- |
+| tag   | u1   | 值为12                             |
+| index | u2   | 指向该字段或方法名称常量项的索引   |
+| index | u2   | 指向该字段或方法描述符常量项的索引 |
+
+12）CONSTANT_MethodHandle_info
+
+表示方法句柄。
+
+| 结构            | 类型 | 描述                                                         |
+| --------------- | ---- | ------------------------------------------------------------ |
+| tag             | u1   | 值为15                                                       |
+| reference_kind  | u1   | 值必须在1至9之间（包括1和9），它决定方法句柄的类型。方法句柄类型的值表示方法句柄的字节码行为 |
+| reference_index | u2   | 值必须是对常量池的有效索引                                   |
+
+13）CONSTANT_MethodType_info
+
+表示方法类型。
+
+| 结构             | 类型 | 描述                                                         |
+| ---------------- | ---- | ------------------------------------------------------------ |
+| tag              | u1   | 值为16                                                       |
+| descriptor_index | u2   | 值必须是对常量池的有效索引，常量池在该索引处的项必须是 CONSTANT_Utf8_info 结构，表示方法的描述符 |
+
+14）CONSTANT_Dynamic_info
+
+表示一个动态计算常量。
+
+| 结构                        | 类型 | 描述                                                         |
+| --------------------------- | ---- | ------------------------------------------------------------ |
+| tag                         | u1   | 值为17                                                       |
+| bootstrap_method_attr_index | u2   | 值必须是对当前 Class 文件中引导方法表的 bootstrap_methods[] 数组的有效索引 |
+| name_and_type_index         | u2   | 值必须是对当前常量池的有效索引，常量池在该索引处的项必须是 CONSTANT_NameAdnType_info 结构，表示方法名和方法描述符 |
+
+15）CONSTANT_InvokeDynamic_info
+
+表示一个动态方法调用点。
+
+| 结构                        | 类型 | 描述                                                         |
+| --------------------------- | ---- | ------------------------------------------------------------ |
+| tag                         | u1   | 值为18                                                       |
+| bootstrap_method_attr_index | u2   | 值必须是对当前 Class 文件中引导方法表的 bootstrap_methods[] 数组的有效索引 |
+| name_and_type_index         | u2   | 值必须是对当前常量池的有效索引，常量池在该索引处的项必须是 CONSTANT_NameAdnType_info 结构，表示方法名和方法描述符 |
+
+16）CONSTANT_Module_info
+
+表示一个模块。
+
+| 结构       | 类型 | 描述                                                         |
+| ---------- | ---- | ------------------------------------------------------------ |
+| tag        | u1   | 值为19                                                       |
+| name_index | u2   | 值必须是对当前常量池的有效索引，常量池在该索引处的项必须是 CONSTANT_Utf8_info 结构，表示模块名字 |
+
+17）CONSTANT_Package_info
+
+表示一个模块中开放或者导出的包。
+
+| 结构       | 类型 | 描述                                                         |
+| ---------- | ---- | ------------------------------------------------------------ |
+| tag        | u1   | 值为20                                                       |
+| name_index | u2   | 值必须是对当前常量池的有效索引，常量池在该索引处的项必须是 CONSTANT_Utf8_info 结构，表示包名称 |
+
+#### 3.1.5 访问标志
+
+**1. 概念**
+
+常量池后面的2个字节是访问标志（access_flags）。
+
+**2. 作用**
+
+用于识别一些类或接口层次的访问信息。
+
+**3. 访问标志位结构**
+
+共有9种标志位，如下表
+
+| 标志名称       | 标志值 | 含义                                                         |
+| -------------- | ------ | ------------------------------------------------------------ |
+| ACC_PUBLIC     | 0x0001 | 是否为 public 类型                                           |
+| ACC_FINAL      | 0x0010 | 是否被声明为 final（只有类可设置）                           |
+| ACC_SUPER      | 0x0020 | 是否允许使用 invokespecial 字节码指令的新语义，JDK1.0.2 后编译出来的类的这个标志必须为真 |
+| ACC_INTRFACE   | 0x0200 | 标识这是一个接口                                             |
+| ACC_ABSTRACT   | 0x0400 | 是否为 abstract 类型，对于接口或者抽象类来说，此标志值为真，其他类型值为假 |
+| ACC_SYNTHETIC  | 0x1000 | 标识这个类并非由用户代码产生的                               |
+| ACC_ANNOTATION | 0x2000 | 标识这是一个注解                                             |
+| ACC_ENUM       | 0x4000 | 标识这是一个枚举                                             |
+| ACC_MODULE     | 0x8000 | 标识这是一个模块                                             |
+
+#### 3.1.6 类索引、父类索引与接口索引集合
+
+**1. 概念**
+
+访问标志的后面按顺序依次是类索引、父类索引和接口索引集合。
+
+类索引（this_class）和父类索引（super_class）都是一个u2类型的数据，而接口索引集合（interfaces）是一组u2类型的数据的集合。
+
+**2. 作用**
+
+Class文件中由这三项数据来确定该类型的继承关系。
+
+- 类索引用于确定这个类的全限定名。
+- 父类索引用于确定这个类的父类的全限定名。
+- 接口索引集合用来描述这个类实现了哪些接口，这些被实现的接口将按 implements 关键字（如果这个Class文件表示的是一个接口，则应当是 extends 关键字）后的接口顺序从左到右排列在接口索引集合中。
+
+> 除了 java.lang.Object 外，所有的 Java 类都有父类，即它们的父类索引都不为0。
+
+**3. 组成**
+
+- 类索引：一个 u2 类型的索引数据
+- 父类索引：一个 u2 类型的索引数据
+- 接口索引集合：第一项 u2 类型的数据为接口计数器（interfaces_count），表示索引表的容量。后面则是具体的索引数据（接口计数器值为0则没有此数据）。
+
+#### 3.1.7 字段表集合
+
+**1. 概念**
+
+接口索引集合后面的是字段表集合。
+
+**2. 作用**
+
+字段表（field_info）用于描述接口或者类中声明的变量。
+
+**3. 结构**
+
+字段表集合的结构如下表。
+
+| 类型           | 名称             | 数量             |
+| -------------- | ---------------- | ---------------- |
+| u2             | access_flags     | 1                |
+| u2             | name_index       | 1                |
+| u2             | descriptor_index | 1                |
+| u2             | attributes_count | 1                |
+| attribute_info | attributes       | attributes_count |
+
+1）access_flags 标志位结构
+
+字段修饰符放在 access_flags 项目中，它与类中的 access_flags 项目非常类似，都是一个 u2 的数据类型，其中可以设置的标志位和含义如下表。
+
+| 标志名称      | 标志值 | 含义                     |
+| ------------- | ------ | ------------------------ |
+| ACC_PUBLIC    | 0x0001 | 字段是否 public          |
+| ACC_PRIVATE   | 0x0002 | 字段是否 private         |
+| ACC_PROTECTED | 0x0004 | 字段是否 protected       |
+| ACC_STATIC    | 0x0008 | 字段是否 static          |
+| ACC_FINAL     | 0x0010 | 字段是否 final           |
+| ACC_VOLATILE  | 0x0040 | 字段是否 volatile        |
+| ACC_TRANSIENT | 0x0080 | 字段是否 transient       |
+| ACC_SYNTHETIC | 0x1000 | 字段是否由编译器自动产生 |
+| ACC_ENUM      | 0x4000 | 字段是否 enum            |
+
+2）name_index 标志位结构
+
+字段的简单名称。
+
+3）descriptor_index 标志位结构
+
+字段和方法的描述符，如下表。
+
+> Class 文件格式种，只要两个字段的描述符不是完全相同，则字段重名是合法的。
+
+| 标识字段 | 含义                            |
+| -------- | ------------------------------- |
+| B        | 基本类型 byte                   |
+| C        | 基本类型 char                   |
+| D        | 基本类型 double                 |
+| F        | 基本类型 float                  |
+| I        | 基本类型 int                    |
+| J        | 基本类型 long                   |
+| S        | 基本类型 short                  |
+| Z        | 基本类型 boolean                |
+| V        | 特殊类型 void                   |
+| L        | 对象类型，如 Ljava/lang/Object; |
+
+对于数组类型，每一维度使用一个前置 `[` 字符来描述，如 `java.lang.String[][]` 二维数组类型用 `[[Ljava/lang/String` 表示。
+
+#### 3.1.8 方法表集合
+
+**1. 概念**
+
+字段集合后面的是方法表集合。
+
+**2. 作用**
+
+方法表（method_info）用于描述接口或者类中声明的方法。
+
+**3. 结构**
+
+方法表集合的结构（其结构与字段表集合几乎完全一致）如下表。
+
+| 类型           | 名称             | 数量             |
+| -------------- | ---------------- | ---------------- |
+| u2             | access_flags     | 1                |
+| u2             | name_index       | 1                |
+| u2             | descriptor_index | 1                |
+| u2             | attributes_count | 1                |
+| attribute_info | attributes       | attributes_count |
+
+1）access_flags 标志位结构
+
+方法修饰符放在 access_flags 项目中，相比字段修饰符少了 ACC_VOLATILE 标志和 ACC_TRANSIENT 标志，增加了 ACC_SYNCHRONIZED、ACC_NATIVE、ACC_STRICTFP 和 ACC_ABSTRACT 标志。结构如下表。
+
+| 标志名称         | 标志值 | 含义                           |
+| ---------------- | ------ | ------------------------------ |
+| ACC_PUBLIC       | 0x0001 | 方法是否 public                |
+| ACC_PRIVATE      | 0x0002 | 方法是否 private               |
+| ACC_PROTECTED    | 0x0004 | 方法是否 protected             |
+| ACC_STATIC       | 0x0008 | 方法是否 static                |
+| ACC_FINAL        | 0x0010 | 方法是否 final                 |
+| ACC_SYNCHRONIZED | 0x0020 | 方法是否 synchronized          |
+| ACC_BRIDGE       | 0x0040 | 方法是否由编译器产生的桥接方法 |
+| ACC_VARARGS      | 0x0080 | 方法是否接受不定参数           |
+| ACC_NATIVE       | 0x0100 | 方法是否为 native              |
+| ACC_ABSTRACT     | 0x0400 | 方法是否为 abstract            |
+| ACC_STRICT       | 0x0800 | 方法是否为 strictfp            |
+| ACC_SYNTHETIC    | 0x1000 | 方法是否由编译器自动产生       |
+
+2）name_index 标志位结构
+
+方法的简单名称。
+
+3）descriptor_index 标志位结构
+
+字段和方法的描述符，结构同字段表集合中的 descriptor_index 标志位结构。
+
+> 如果两个方法有相同的名称和特征签名，但返回值不同，也是可以合法共存于同一个 Class 文件中的。 
+
+#### 3.1.9 属性表集合
+
+
+
+（未完待续）
+
 ## 4 虚拟机类加载机制
 
 ### 4.3 类加载的过程
