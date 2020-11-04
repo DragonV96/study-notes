@@ -1015,15 +1015,19 @@ vim /etc/docker/daemon.json
 "registry-mirrors":["https://registry.docker-cn.com","https://pee6w651.mirror.aliyuncs.com","http://hub-mirror.c.163.com","https://docker.mirrors.ustc.edu.cn"]
 }
 
+# 或者
+{"registry-mirrors": ["https://registry.cn-hangzhou.aliyuncs.com","https://05f073ad3c0010ea0f4bc00b7105ec20.mirror.swr.myhuaweicloud.com","http://f1361db2.m.daocloud.io","https://mirror.ccs.tencentyun.com"]
+}
 ````
 
-3.重启 docker 服务即可
+3.重启 docker 守护线程和服务即可
 
 ````
+systemctl daemon-reload
 systemctl restart docker
 ````
 
-### 4.3 jsp等命令无效
+### 4.3 jps等命令无效
 
 根据自己安装的jdk版本补充安装对应的工具包（如jdk1.8）
 
