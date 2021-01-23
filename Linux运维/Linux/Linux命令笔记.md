@@ -630,6 +630,7 @@ rpm -e git
 ````
 
 3.未完
+
 ### 2.6 安装Redis
 ### 2.7 安装MongoDB
 ### 2.8 安装erlang
@@ -793,63 +794,70 @@ Docker 要求 CentOS 系统的内核版本高于 3.10 。
 
 1.查看操作系统当前的内核版本
 
-````
+````shell
 uname -r
 ````
 
 2.更新yum包到最新
 
-````
-yum update
+````shell
+yum -y update
 ````
 
 3.卸载旧版本（如果存在旧版本，不存在则跳过）
 
-````
-yum remove docker docker-common docker-selinux docker-engine -y
+````shell
+yum remove -y docker docker-common docker-selinux docker-engine
 ````
 
-4.安装docker需要的软件，yum-util提供yum-config-manager功能，其他两个是devicemapper驱动依赖的包
+4.安装docker需要的软件，yum-util 提供 yum-config-manager 功能，其他两个是 devicemapper 驱动依赖的包
 
-````
+````shell
 yum install -y yum-utils device-mapper-persistent-data lvm2
 ````
 
-5.配置yum源
+5.配置 yum 源
 
-````
+````shell
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 ````
 
-6.查看所有仓库中所有docker版本，并选择特定版本进行安装
+6.查看所有仓库中所有 docker 版本，并选择特定版本进行安装
 
-````
+````shell
 yum list docker-ce --showduplicates | sort -r
 ````
 
-7.安装docker
+7.安装 docker
 
-````
-yum -y install docker-ce			(默认装最新稳定版)
-````
-
-8.启动docker服务
-
-````
-systemctl start docker		(启动)
-systemctl stop docker		(关闭,安装过程不要执行)
+````shell
+# 默认装最新稳定版
+yum -y install docker-ce
 ````
 
-9.开机启动docker服务
+8.启动 docker 服务
 
-````
-systemctl enable docker		(启动)
-systemctl disable docker	(关闭,安装过程不要执行)
+````shell
+# 启动
+systemctl start docker
+
+# 关闭,安装过程不要执行
+systemctl stop docker
 ````
 
-10.查看docker版本（有client和server表示docker安装成功）
+9.开机启动 docker 服务
 
+````shell
+# 启动
+systemctl enable docker
+
+# 关闭,安装过程不要执行
+systemctl disable docker
 ````
+
+10.查看 docker 版本（有 client 和 server 表示 docker 安装成功）
+
+````shell
 docker version
 ````
 ### 2.12 安装Jenkins
