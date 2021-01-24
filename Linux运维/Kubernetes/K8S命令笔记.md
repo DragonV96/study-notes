@@ -574,7 +574,20 @@ http://任意一个Worker节点的IP地址:32567/
 
 ### 3.4 K8S 搭建 efk
 
+## 4 卸载
 
+### 4.1 一键卸载 Docker 及 K8S
 
-## 4 常见问题排查
+````shell
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+docker rmi $(docker images -aq)
+yum remove -y docker docker-client docker-client-latest docker-ce-cli docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
+systemctl disable kubelet
+yum remove -y kubelet kubeadm kubectl
+echo 3 > /proc/sys/vm/drop_caches
+ps -aux | grep kube
+````
+
+## 5 常见问题排查
 
