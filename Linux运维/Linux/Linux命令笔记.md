@@ -1,3 +1,5 @@
+
+
 # Linux学习笔记(Cent OS7)
 
 - [1 常用命令](#1-常用命令)
@@ -614,22 +616,87 @@ tar -zxvf mysql-5.7.26-linux-glibc2.12-x86_64.tar.gz
 未完
 ### 2.5 安装Git
 
-1.查看是否安装过git
+1）查看是否安装过 git
 
-````
-rpm -qa|grep git
-````
-
-显示有以`git-`+版本号的字符，表示已经装过git
-
-2.若已经安装，需要先卸载（两条命令任选其一即可）
-
-````
-rpm -e --nodeps git
-rpm -e git
+````shell
+git --version
 ````
 
-3.未完
+2）卸载老版本 git（如果有必要）
+
+````shell
+yum -y remove git
+````
+
+3）进入需要安装的目录
+
+````shell
+cd /usr/local
+````
+
+4）获取 git 源码压缩包
+
+````shell
+wget https://github.com/git/git/archive/v2.24.2.tar.gz
+````
+
+5）解压 git 源码包
+
+````shell
+tar -zxvf v2.24.2.tar.gz
+````
+
+6）安装编译所需环境及组件
+
+````shell
+yum -y install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils-MakeMaker
+````
+
+7）卸载上个步骤中自动安装的旧版本 git
+
+````shell
+yum -y remove git
+````
+
+8）进入 git 文件夹，编译 git 源码
+
+````shell
+cd /git-2.24.2
+make
+````
+
+9）安装 git
+
+````shell
+make install
+````
+
+10）查看 git 版本号（显示版本号则表示安装成功）
+
+````shell
+./git --version
+````
+
+11）配置 git 环境变量
+
+````shell
+vim /etc/profile
+
+# 最后一行加上此代码，保存并退出
+export PATH=$PATH:/usr/local/git-2.24.2/bin-wrappers
+````
+
+12）使配置生效
+
+````shell
+source /etc/profile
+````
+
+13）再次查看版本号，确认是否安装完成
+
+````shell
+git --version
+````
 
 ### 2.6 安装Redis
 ### 2.7 安装MongoDB
