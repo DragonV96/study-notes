@@ -61,6 +61,71 @@ show variables like 'sync_binlog';
 select SQL_CACHE * from T
 ````
 
+### 1.3 执行计划
+
+#### 1.3.1 使用及作用
+
+**1. 使用方式**
+
+在查询 SQL 前加上 explain 关键字即可查看语句的执行计划，如：
+
+````sql
+EXPLAIN SELECT t.id, t.name FROM table_test t WHERE t.name = 'xxx';
+````
+
+**2. 作用**
+
+- 查询是否走索引
+- 是否全表扫描
+- 语句被优化器采用何种策略
+
+#### 1.3.2 参数详解
+
+explain 查询计划有10列信息，如图。
+
+![1614233928217](assets/1614233928217.png)
+
+**1. id**
+
+id 是 SQL 执行的顺序标识：
+
+- id 相同时，执行顺序由上至下；
+- 含子查询时，id 的序号会递增，id 值越大优先级越高，越先被执行；
+
+**2. select_type**
+
+select_type 表示查询中每个 SELECT 的子句类型，分为9类：
+
+- SIMPLE：简单查询，未使用 UNION 或子查询；
+- PRIMARY：查询包含复杂的子查询时，最外层 SELECT 为此类型；
+- UNION：UNION 中的第二个或后面的 SELECT 语句；
+- DEPENDENT UNION：UNION 中的第二个或后面的 SELECT 语句，取决于外面的查询；
+- SUBQUERY：子查询种的第一个 SELECT 语句；
+- DEPENDENT  SUBQUERY：子查询种的第一个 SELECT 语句，取决于外面的查询；
+- DERIVED：派生表的 SELECT FROM 子句的子查询；
+- UNCACHEBALE SUBQUERY：一个子查询的结果不能被缓存，必须重新评估外连接的第一行。
+
+**3. table**
+
+table 中显示查询的结果集是来自于哪张表的，显示为 \<derivedn>（n 表示数字）表示第几步执行结果
+
+**4. type**
+
+type 表示查询语句在表中搜索结果集的方式，分为8类：
+
+- ALL：全表扫描；
+- index：只遍历索引树；
+- range：只检索给定范围的行，使用一个索引来选择行；
+- ref：非唯一索引，返回匹配某个单独值的所有行；
+- eq_ref：唯一索引，对于每个索引键，表中只有一条记录与之匹配（常见于使用主键或唯一索引作为 WHERE 条件）；
+- const：表示通过索引一次就找到结果集（MySQL 优化器对查询某部分进行了优化，并将该查询转换为一个常量）；
+- system：表只有一行记录，const 的特例；
+- NULL：
+
+对应查询类型效率依次降低：system > const > eq_ref > ref > range > index > ALL。
+
+查询语句一般达到 range 或 ref 级别即可。
+
 ## 2 日志
 
 ### 2.1 binlog 日志
