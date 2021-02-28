@@ -455,3 +455,30 @@ git rm xxx.js
 ```
 
 ![1588730161370](assets/1588730161370.png)
+
+### 4.3 本地已配置ssh但push时仍需输账号密码
+
+1）查看本地项目远程地址 url 版本
+
+````shell
+git remote -v
+````
+
+![image-20210228142246374](assets/image-20210228142246374.png)
+
+2）设置为新的 ssh 地址
+
+````shell
+git remote set-url origin [你的项目 ssh 地址]
+
+# 实例
+git remote set-url origin git@github.com:DragonV96/easy-cloud.git
+````
+
+3）再次查看本地项目远程地址 url 版本，已经更改正确，即可无账号密码推送
+
+````shell
+git remote -v
+````
+
+![image-20210228142304179](assets/image-20210228142304179.png)
