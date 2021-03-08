@@ -217,26 +217,28 @@ touch config
 
 ````
 # gitlab                                                                       
-Host gitlab
-   Port 22
-    User git
-    HostName gitlab.com
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/id_rsa_gitlab
+Host gitlab.com
+Port 22
+User git
+HostName gitlab.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa_gitlab
+
 # github                                                                           
-Host github
-    Port 22
-    User git
-    HostName github.com
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/id_rsa_github
+Host github.com
+Port 22
+User git
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa_github
+
 # gitee                                                                           
-Host gitee
-    Port 22
-    User git
-    HostName gitee.com
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/id_rsa_gitee
+Host gitee.com
+Port 22
+User git
+HostName gitee.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa_gitee
 ````
 
 配置文件字段对应解释：

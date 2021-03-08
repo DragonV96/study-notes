@@ -643,7 +643,7 @@ wget https://github.com/git/git/archive/v2.24.2.tar.gz
 5）解压 git 源码包
 
 ````shell
-tar -zxvf v2.24.2.tar.gz
+tar -zxvf git-2.24.2.tar.gz
 ````
 
 6）安装编译所需环境及组件
@@ -661,7 +661,7 @@ yum -y remove git
 8）进入 git 文件夹，编译 git 源码
 
 ````shell
-cd /git-2.24.2
+cd git-2.24.2
 make
 ````
 
@@ -898,8 +898,8 @@ yum list docker-ce --showduplicates | sort -r
 7.安装 docker
 
 ````shell
-# 默认装最新稳定版
-yum -y install docker-ce
+# 默认装最新稳定版(yum -y install docker-ce)，此处指定安装19.03版本
+yum -y install docker-ce-19.03.9
 ````
 
 8.启动 docker 服务
