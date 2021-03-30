@@ -256,7 +256,7 @@ poll 底层数据结构是链表，没有最大连接限制。
 
 **1. 数据结构**
 
-epoll 底层数据结构是红黑树，增删改查的时间复杂度都为 O(n)。
+epoll 底层数据结构是红黑树，增删改查的时间复杂度都为 O(logn)。
 
 > Linux 2.6 内核版本所提供。
 
@@ -306,7 +306,7 @@ I/O 复用器 Selector 实现了非阻塞 I/O。
 
 **3. 实现原理**
 
-Socket 通信中的 conect、accept、read 以及 write 等4个阻塞操作，在 Selector 中分别对应 SelectionKey 的四个监听事件 OP_ACCEPT、OP_CONNECT、OP_READ 以及 OP_WRITE。
+Socket 通信中的 connect、accept、read 以及 write 等4个阻塞操作，在 Selector 中分别对应 SelectionKey 的四个监听事件 OP_ACCEPT、OP_CONNECT、OP_READ 以及 OP_WRITE。
 
 ![1616379757852](assets/1616379757852.png)
 
