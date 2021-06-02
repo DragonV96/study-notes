@@ -37,7 +37,7 @@ public final class String
 
 String类不变性的原因：
 
-- String 被 final 修饰，所以String类不能被继承，类方法不能被覆写
+- String 被 final 修饰，所以 String 类不能被继承，类方法不能被覆写
 - String中保存数据的是一个被final修饰的char型数组value，同时value是private权限的，String也未提供对value赋值的操作方法，所以value被赋值后，内存地址无法修改。
 
 **2. 首字母大小写**
