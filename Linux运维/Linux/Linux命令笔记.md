@@ -221,6 +221,14 @@ tail -[查看的行数]f [文件名字]
 head -200f sys-info.log
 ```
 
+**4. 查看指定文件夹大小**
+
+````shell
+du -h --max-depth=1 [文件夹路径]
+# 实例
+du -h --max-depth=1 /usr/
+````
+
 #### 1.1.6 运行
 
 **1. 前台运行jar包**
@@ -420,6 +428,24 @@ alias nginx="bash /usr/local/nginx/sbin/nginx"
 source ~/.bashrc
 ````
 
+### 1.10 合并home到根目录
+
+````shell
+# 1.查看home目录大小（记住 /home 目录大小）
+df -lh
+
+# 2.取消挂载 /home 目录
+umount /home
+
+# 3.移除 /home 目录所在 lv
+lvremove /dev/centos/home
+
+# 4.扩展根目录所在 lv（扩展大小是原来 /home 目录大小）
+lvextend -L +893G /dev/centos/root
+
+# 5.保存扩展（xfs系统）
+xfs_growfs /dev/centos/root
+````
 
 ## 2 安装软件
 
@@ -985,7 +1011,64 @@ firewall-cmd --reload											(重启防火墙)
 cat /var/lib/jenkins/secrets/initialAdminPassword
 ````
 ### 2.13 安装fastDFS
+### 2.14 安装Nginx
+
+1.安装 nginx 所需环境
+
+````shell
+yum -y install gcc pcre-devel zlib-devel openssl openssl-devel
+````
+
+2.解压 nginx 安装包
+
+````shell
+tar -zxvf nginx-1.12.2.tar.gz
+````
+
+3.进入 ngxin 目录
+
+````shell
+cd nginx-1.12.2
+````
+
+4.设置 nginx 的安装路径，需要支持 https，配置 https
+
+````shell
+./configure --prefix=/usr/local/nginx --with-http_ssl_module
+````
+
+5.编译安装 ngixn
+
+````shell
+make && make install
+````
+
+6.nginx 操作命令
+
+首先需要进入 nginx 安装目录：`cd /usr/local/nginx/sbin`
+
+````shell
+# 配置nginx
+vim /usr/local/nginx/conf/nginx.conf
+
+# 启动 nginx
+/usr/local/nginx/sbin/nginx
+
+# 关闭 nginx
+/usr/local/nginx/sbin/nginx -s quit
+/usr/local/nginx/sbin/nginx -s stop
+
+# 重启 nginx
+/usr/local/nginx/sbin/nginx -s reload
+
+# 设置开机启动 nginx
+vim /etc/rc.local
+# 在底部增加下面代码
+/usr/local/nginx/sbin/nginx
+````
+
 ## 3 卸载软件
+
 ### 3.1 卸载jdk
 
 1.查询系统是否安装jdk（三种命令执行一种即可）
