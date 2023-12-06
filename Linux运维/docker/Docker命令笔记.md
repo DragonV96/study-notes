@@ -194,7 +194,7 @@ docker-compose images
 ​	3.查看docker-compose日志
 
 ```
-docker-compose logs -f
+docker-compose logs -ft --tail 400
 ```
 
 #### 1.1.2 容器操作相关命令
@@ -252,7 +252,7 @@ uname -r
 ​	2.更新yum包到最新
 
 ```
-yum update
+yum update -y
 ```
 
 ​	3.卸载旧版本（如果存在旧版本，不存在则跳过）
@@ -323,10 +323,10 @@ docker version
 
 ​	3.下载[docker-compose-Linux-x86_64](https://github.com/docker/compose/releases/download/1.25.0/docker-compose-Linux-x86_64)
 
-​	4.上传到 `/usr/local/bin` 目录下，然后重命名为 `docker-compose`
+​	4.上传并移动到到 `/usr/local/bin` 目录下，然后重命名为 `docker-compose`
 
 ```
-mv docker-compose-Linux-x86_64 docker-compose
+mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
 ```
 
 ​	5.赋予 `docker-compose` 文件root权限

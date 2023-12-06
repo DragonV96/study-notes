@@ -583,7 +583,7 @@ AOP 不仅可以对方法增加新的功能，还能对一个对象增加新的�
 
 ②DispatcherServlet 查询一个或多个处理器映射（Handler mapping），处理器映射根据 URL 信息选择对应的控制器信息返回给 DispatcherServlet；
 
-③DispatcherServlet 将请求发给选中的控制器，控制器拿到请求数据，交给 Service 层去执行业务逻辑；
+③DispatcherServlet 将请求发给选中的控制器 Controller，控制器 Controller 拿到请求数据，交给 Service 层去执行业务逻辑；
 
 ④控制器将处理完返回的模型和逻辑视图名发送到 DispatcherServlet；
 

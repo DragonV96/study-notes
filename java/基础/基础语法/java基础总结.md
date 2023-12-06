@@ -562,6 +562,6 @@ private static <T> int binarySearch0(T[] a, int fromIndex, int toIndex,
 }
 ````
 
-**3）如果我希望ArrayList初始化之后，不能为修改，怎么做？**
+**3）如果我希望ArrayList初始化之后，不能修改，怎么做？**
 
 答：使用Collections的unmodifiableList的方法，该方法会返回一个不能被修改的内部类集合，这些集合类值开放查询的方法，其他方法重写了，调用则会直接抛出 `UnsupportedOperationException` 异常。

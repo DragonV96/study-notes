@@ -131,7 +131,7 @@ netstat -nap | grep SYN_RECV
 
 **第二次握手**
 
-服务器收到客户端的数据包，校验客户端的 SYN 标志位为1后，将 `ack` 的值设置为x+1，发送 `SYN=1,ACK=1 ack=x+1,seq=y` 的数据包到客户端，服务器进入 SYN_RECV 状态
+服务器收到客户端的数据包，校验客户端数据包的 SYN 标志位为1后，将 `ack` 的值设置为x+1，发送 `SYN=1,ACK=1 ack=x+1,seq=y` 的数据包到客户端，服务器进入 SYN_RECV 状态
 
 **第三次握手**
 

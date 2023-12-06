@@ -1,3 +1,12 @@
+````shell
+kubeadm join apiserver.demo:6443 --token n1jsw9.0iqur09ootszdst7 \
+    --discovery-token-ca-cert-hash sha256:e69288ca1cb8b40329b23e78dc6c8b4ec7e249cd0060f2ece27186b100866361
+````
+
+
+
+
+
 * 创建tracker容器：
 
 ```shell
@@ -33,7 +42,7 @@ docker logs -f -t --tail 666 storage
 
 docker exec -it fastdfs bash
 
-echo "Hello FastDFS!">index.html
+echo "Hello FastDFS!">index1.html
 
 fdfs_test /etc/fdfs/client.conf upload index.html
 浏览器输入example file url访问
@@ -86,6 +95,8 @@ docker save -o /usr/local/comtom/dockerimages/gbstar_tbapi-service.tar registry.
 vi /etc/sysconfig/network-scripts/ifcfg-ens01
 vim /etc/sysconfig/network-scripts/ifcfg-ens33
 service network restart
+systemctl stop firewalld
+systemctl disable firewalld
 
 TYPE=Ethernet
 PROXY_METHOD=none
@@ -103,12 +114,12 @@ DEVICE=enp1s0
 ONBOOT=yes
 
 
-IPADDR=192.168.200.233
+IPADDR=192.168.10.203
 NETMASK=255.255.255.0
-GATEWAY=192.168.200.254
+GATEWAY=192.168.10.2
 
 PREFIX=24
-DNS1=192.168.102.2
+DNS1=8.8.8.8
 DNS2=114.114.114.114
 ZONE=public
 ````
