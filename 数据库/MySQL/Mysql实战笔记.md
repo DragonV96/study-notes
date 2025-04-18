@@ -439,7 +439,7 @@ InnoDB 引擎特有的日志，又称重做日志。
 
 **1. 概念**
 
-WAL 的全称是 WriteAhead Logging，它的关键点就是先写日志，再写磁盘。
+WAL 的全称是 Write Ahead Logging，它的关键点就是先写日志，再写磁盘。
 
 **2. 作用**
 

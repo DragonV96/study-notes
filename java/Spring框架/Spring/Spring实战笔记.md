@@ -321,6 +321,7 @@ Spring 中 bean 的五种作用域：
 - 原型（Prototype）：每次注入或者通过 Spring 应用上下文获取的时候，都会创建一个新的 bean 实例
 - 会话（Session）：Web 应用中，为每个会话创建一个 bean 实例
 - 请求（Request）：Web 应用中，为每个请求创建一个 bean 实例
+- 应用（Application）：Web 应用中，每个 ServletContext 会创建一个新的 bean （类似于单例，但在集群中是每台机器一个）
 
 bean 的作用域默认为单例模式。
 
